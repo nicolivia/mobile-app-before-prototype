@@ -57,4 +57,4 @@ This project aims to solve the problem of inefficient product searches and stock
 
 ## 📝 License
 
-This project is licensed under the MIT License. See the [LICENSE]([https://github.com/hikaru028/Twitter-Clone/edit/main/README.md](https://github.com/CS778-S2-2024-Organisational-Resilience/image-recognition-app/edit/main/README.md)) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/CS778-S2-2024-Organisational-Resilience/image-recognition-app/blob/main/LICENSE) file for details.
