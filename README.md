@@ -2,7 +2,7 @@
 
 This project aims to solve the problem of inefficient product searches and stock checks. The expected outcome is an AI-driven application that uses image recognition for quick, accurate product identification, offering relevant information via images or videos.
 
-# 👨‍💻 Project Fellows
+## 👨‍💻 Project Fellows
 
 Hikaru Suzuki - [hikaru028](https://github.com/hikaru028) 
 Hong Chen - [nicolivia](https://github.com/nicolivia) 
@@ -46,10 +46,10 @@ Srimathi Sreevathsan [srimathi-sreevathsan]([https://github.com/hikaru028](https
 ## 📥 Installation
 
 
-## 🏃‍♂️ Running the Mobile Application
+## 📱 Running the Mobile Application
 
 
-## 🏃‍♂️ Running the Web Application
+## 🖥️ Running the Web Application
 
 
 ## ✅ Testing the Application
