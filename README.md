@@ -4,9 +4,9 @@ This project aims to solve the problem of inefficient product searches and stock
 
 ## 👨‍💻 Project Fellows
 
-Hikaru Suzuki - [hikaru028](https://github.com/hikaru028) 
-Hong Chen - [nicolivia](https://github.com/nicolivia) 
-Srimathi Sreevathsan [srimathi-sreevathsan]([https://github.com/hikaru028](https://github.com/srimathi-sreevathsan)) 
+- Hikaru Suzuki - [hikaru028](https://github.com/hikaru028) 
+- Hong Chen - [nicolivia](https://github.com/nicolivia) 
+- Srimathi Sreevathsan [srimathi-sreevathsan]([https://github.com/hikaru028](https://github.com/srimathi-sreevathsan)) 
 
 ## 📜 Table of Contents
 
