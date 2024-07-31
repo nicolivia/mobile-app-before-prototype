@@ -27,7 +27,8 @@ migrate = Migrate(app, db)
 with app.app_context():
     db.create_all()
 
-from app import routes
+from app import auth_routes
+from app import contact_routes
 
 if __name__ == '__main__':
     app.run(debug=True)

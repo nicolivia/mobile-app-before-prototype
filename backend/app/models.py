@@ -10,7 +10,7 @@ class Customers(db.Model):
     full_name = db.Column(db.String(80), unique=True, nullable=True)
     email = db.Column(db.String(345), unique=True, nullable=True)
     phone = db.Column(db.String(20), unique=True, nullable=True)
-    bod = db.Column(db.Date, nullable=True)
+    dob = db.Column(db.Date, nullable=True)
     ethnicity = db.Column(db.String(20), nullable=True)
     gender = db.Column(db.String(10), nullable=True)
     address = db.Column(db.String(120), nullable=True)
@@ -25,10 +25,12 @@ class Customers(db.Model):
             'fullName': self.full_name,
             'email': self.email,
             'phone': self.phone,
-            'bod': self.bod,
+            'dob': self.dob,
             'ethnicity': self.ethnicity,
             'gender': self.gender,
             'address': self.address,
+            'temporaryPassword': self.temporary_password,
+            'passwordExpiry': self.password_expiry,
             'createdAt': self.created_at,
             'updatedAt': self.updated_at
         }
