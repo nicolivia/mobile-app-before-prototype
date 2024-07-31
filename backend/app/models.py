@@ -16,8 +16,8 @@ class Customers(db.Model):
     address = db.Column(db.String(120), nullable=True)
     temporary_password = db.Column(db.String(6), nullable=True)
     password_expiry = db.Column(db.DateTime, nullable=True)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
-    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
     def to_json(self):
         return {
@@ -36,14 +36,12 @@ class Customers(db.Model):
 # Employees' database schema    
 class Employees(db.Model):
     __tablename__ = 'employees'
-    id = db.Column(db.String(32), primary_key=True, unique=True)
-    employee_id = db.Column(db.String(10), unique=True, nullable=False)
+    id = db.Column(db.String(32), unique=True)
+    employee_id = db.Column(db.String(10), primary_key=True, unique=True, nullable=False)
     full_name = db.Column(db.String(80), unique=True, nullable=False)
     img_url = db.Column(db.String(200), nullable=True)
-    temporary_password = db.Column(db.String(6), nullable=True)
-    password_expiry = db.Column(db.DateTime, nullable=True)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
-    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    password = db.Column(db.String(120), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     
     def to_json(self):
         return {
@@ -52,6 +50,5 @@ class Employees(db.Model):
             'fullName': self.full_name,
             'imgUrl': self.img_url,
             'createdAt': self.created_at,
-            'updatedAt': self.updated_at
         }
     
