@@ -57,19 +57,15 @@ class Employees(db.Model):
 # Emergency contacts' database schema    
 class Contacts(db.Model):
     __tablename__ = 'contacts'
-    id = db.Column(db.String(32), primary_key=True, unique=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(80), nullable=True)
     address = db.Column(db.String(200), nullable=True)
-    phone = db.Column(db.String(120), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
-    
+    phone = db.Column(db.String(120), nullable=True, unique=True)
+        
     def to_json(self):
         return {
             'id': self.id,
             'name': self.name,
             'address': self.address,
             'phone': self.phone,
-            'createdAt': self.created_at,
-            'updatedAt': self.updated_at
         }
