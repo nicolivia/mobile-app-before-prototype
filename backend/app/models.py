@@ -53,4 +53,23 @@ class Employees(db.Model):
             'imgUrl': self.img_url,
             'createdAt': self.created_at,
         }
+        
+# Emergency contacts' database schema    
+class Contacts(db.Model):
+    __tablename__ = 'contacts'
+    id = db.Column(db.String(32), primary_key=True, unique=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
+    address = db.Column(db.String(200), nullable=True)
+    phone = db.Column(db.String(120), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
     
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'address': self.address,
+            'phone': self.phone,
+            'createdAt': self.created_at,
+            'updatedAt': self.updated_at
+        }

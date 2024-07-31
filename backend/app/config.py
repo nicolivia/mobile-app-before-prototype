@@ -32,3 +32,4 @@ class Config:
     TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
     TWILIO_SERVICE_SID = os.getenv('TWILIO_SERVICE_SID')
     PHONE_NUMBER = os.getenv('PHONE_NUMBER')
+    SENDGRID_API_KEY=os.getenv('SENDGRID_API_KEY')

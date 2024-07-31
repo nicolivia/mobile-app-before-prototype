@@ -124,15 +124,14 @@ def login_employee():
     else:
         return handle_error('Invalid credentials', 400)
 
-@app.route('/api/me', methods=['POST'])
-def get_me():
-    return handle_success('get user information')
-
-
-@app.route('/api/logout', methods=['POST'])
+# Common routes
+@app.route('/api/users/logout', methods=['POST'])
 def logout_user():
     return handle_success('Logout successful')
 
+@app.route('/api/users/me', methods=['POST'])
+def get_me():
+    return handle_success('get user information')
 
 # Helpers
 def request_temp_password(contact):
@@ -142,7 +141,7 @@ def request_temp_password(contact):
         return handle_error('Customer not found', 404)
 
     temp_password = create_temp_password()
-    temp_password_expiry = datetime.now() + timedelta(minutes=15)
+    temp_password_expiry = datetime.now() + timedelta(minutes=1)
 
     customer.temporary_password = temp_password
     customer.password_expiry = temp_password_expiry
