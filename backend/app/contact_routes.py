@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from app.app import app, db
 from app.models import Contacts
-from utils import is_valid_phone
+from utils.validation import is_valid_phone
 
 @app.route('/api/contacts/save', methods=['POST'])
 def save_contact():

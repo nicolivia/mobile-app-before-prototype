@@ -27,6 +27,7 @@ with app.app_context():
 
 from app import auth_routes
 from app import contact_routes
+from app import product_routes
 
 if __name__ == '__main__':
     app.run(debug=True)

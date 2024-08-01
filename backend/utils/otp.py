@@ -3,15 +3,10 @@ from twilio.rest import Client
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import random
-import re
 import ssl
-
-# Validation functions
-def is_valid_email(email):
-    return re.match(r"[^@]+@[^@]+\.[^@]+", email)
-
-def is_valid_phone(phone):
-    return re.match(r"^\+?[1-9]\d{1,14}$", phone)
+from datetime import datetime, timedelta
+from utils.status import handle_error, handle_success
+from utils.validation import get_customer_by_contact, is_valid_email
 
 # Create an OTP
 def create_temp_password():
@@ -31,7 +26,7 @@ def send_sms(phone, message):
     )
     return message.sid
 
-# Send an OTP via Email
+# Send an OTP via email
 def send_email(email, message):
     message = Mail(
         from_email=current_app.config['MAIL_FROM'],
@@ -43,3 +38,25 @@ def send_email(email, message):
     sg = SendGridAPIClient(current_app.config['SENDGRID_API_KEY'])
     response = sg.send(message)
     return response.status_code
+
+# Request OTP functions
+def request_temp_password(contact):
+    customer = get_customer_by_contact(contact)
+
+    if not customer:
+        return handle_error('Customer not found', 404)
+
+    temp_password = create_temp_password()
+    temp_password_expiry = datetime.now() + timedelta(minutes=1)
+
+    customer.temporary_password = temp_password
+    customer.password_expiry = temp_password_expiry
+    db.session.commit()
+
+    message = f"Your verification code is {temp_password}. It will expire in 1 minute."
+    if is_valid_email(contact):
+        send_email(customer.email, message)
+    else:
+        send_sms(customer.phone, message)
+
+    return handle_success('Temporary password sent')

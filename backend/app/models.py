@@ -74,28 +74,46 @@ class Contacts(db.Model):
 class Products(db.Model):
     __tablename__ = 'products'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    product_id = db.Column(db.String(30), unique=True, nullable=False)
     category_name = db.Column(db.String(80), nullable=False)
     brand_name = db.Column(db.String(80), nullable=False)
     name = db.Column(db.String(80), nullable=False, unique=True)
     price = db.Column(db.Float, nullable=False)
-    img_url = db.Column(db.String(200), nullable=True)
-    prescription = db.Column(db.Text, nullable=True)
+    prescription = db.Column(db.Text, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    expiry_date = db.Column(db.Date, nullable=True)
+    expiry_date = db.Column(db.Date, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+
+    images = db.relationship('ProductImage', backref='product', lazy=True)
 
     def to_json(self):
         return {
             'id': self.id,
+            'productId': self.product_id,
             'categoryName': self.category_name,
             'brandName': self.brand_name,
             'name': self.name,
             'price': self.price,
-            'imgUrl': self.img_url,
             'prescription': self.prescription,
             'quantity': self.quantity,
             'expiryDate': self.expiry_date,
             'createdAt': self.created_at,
             'updatedAt': self.updated_at,
+            'images': [image.to_json() for image in self.images]
+        }
+        
+# Products' database schema
+class ProductImage(db.Model):
+    __tablename__ = 'product_images'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    img_url = db.Column(db.String(200), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'imgUrl': self.img_url,
+            'createdAt': self.created_at,
         }
