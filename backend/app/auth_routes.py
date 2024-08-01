@@ -25,12 +25,17 @@ def create_customer():
     customer = get_customer_by_contact(contact)
     if customer:
         return handle_error('Customer already exists', 409)
-
+    
+    dob_str = data.get('dob', None)
+    dob = None
+    if dob_str:
+        dob = datetime.strptime(dob_str, '%Y-%m-%d').date()
+    
     new_customer = Customers(
         email=contact if is_valid_email(contact) else None,
         phone=contact if is_valid_phone(contact) else None,
-        fullName=data.get('fullName', None),
-        dob=data.get('dob', None),
+        full_name=data.get('full_name', None),
+        dob=dob,
         ethnicity=data.get('ethnicity', None),
         gender=data.get('gender', None),
         address=data.get('address', None),
@@ -147,9 +152,9 @@ def request_temp_password(contact):
     customer.password_expiry = temp_password_expiry
     db.session.commit()
 
-    message = f"Your temporary password is {temp_password}. It will expire in 15 minutes."
+    message = f"Your verification code is {temp_password}. It will expire in 1 minutes."
     if is_valid_email(contact):
-        send_email(customer.email, "Temporary Password Request", message)
+        send_email(customer.email, message)
     else:
         send_sms(customer.phone, message)
 

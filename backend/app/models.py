@@ -6,8 +6,8 @@ db = SQLAlchemy()
 # Customers' database schema
 class Customers(db.Model):
     __tablename__ = 'customers'
-    id = db.Column(db.String(32), primary_key=True, unique=True)
-    full_name = db.Column(db.String(80), unique=True, nullable=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    full_name = db.Column(db.String(80), nullable=True)
     email = db.Column(db.String(345), unique=True, nullable=True)
     phone = db.Column(db.String(20), unique=True, nullable=True)
     dob = db.Column(db.Date, nullable=True)
@@ -38,13 +38,14 @@ class Customers(db.Model):
 # Employees' database schema    
 class Employees(db.Model):
     __tablename__ = 'employees'
-    id = db.Column(db.String(32), unique=True)
+    id = db.Column(db.Integer, autoincrement=True)
     employee_id = db.Column(db.String(10), primary_key=True, unique=True, nullable=False)
-    full_name = db.Column(db.String(80), unique=True, nullable=False)
+    full_name = db.Column(db.String(80), nullable=False)
     img_url = db.Column(db.String(200), nullable=True)
     password = db.Column(db.String(120), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    
+
+
     def to_json(self):
         return {
             'id': self.id,
@@ -68,4 +69,34 @@ class Contacts(db.Model):
             'name': self.name,
             'address': self.address,
             'phone': self.phone,
+        }
+        
+# Products' database schema
+class Products(db.Model):
+    __tablename__ = 'products'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    category_name = db.Column(db.String(80), nullable=False)
+    brand_name = db.Column(db.String(80), nullable=False)
+    name = db.Column(db.String(80), nullable=False, unique=True)
+    price = db.Column(db.Float, nullable=False)
+    img_url = db.Column(db.String(200), nullable=True)
+    prescription = db.Column(db.Text, nullable=True)
+    quantity = db.Column(db.Integer, nullable=False)
+    expiry_date = db.Column(db.Date, nullable=True)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'categoryName': self.category_name,
+            'brandName': self.brand_name,
+            'name': self.name,
+            'price': self.price,
+            'imgUrl': self.img_url,
+            'prescription': self.prescription,
+            'quantity': self.quantity,
+            'expiryDate': self.expiry_date,
+            'createdAt': self.created_at,
+            'updatedAt': self.updated_at,
         }

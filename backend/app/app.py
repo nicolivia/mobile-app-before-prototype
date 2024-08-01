@@ -3,7 +3,6 @@ from flask_cors import CORS
 from flask_session import Session
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
-from flask_mail import Mail
 from app.models import db
 from app.config import Config
 import pymysql
@@ -16,7 +15,6 @@ app.config.from_object(Config)
 # Initialize extensions
 db.init_app(app)
 bcrypt = Bcrypt(app)
-mail = Mail(app)
 CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
 
 app.config['SESSION_SQLALCHEMY'] = db
