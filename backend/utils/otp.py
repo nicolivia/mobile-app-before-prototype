@@ -2,11 +2,12 @@ from flask import current_app
 from twilio.rest import Client
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-import random
-import ssl
+from app.app import db
 from datetime import datetime, timedelta
 from utils.status import handle_error, handle_success
 from utils.validation import get_customer_by_contact, is_valid_email
+import random
+import ssl
 
 # Create an OTP
 def create_temp_password():
@@ -47,13 +48,13 @@ def request_temp_password(contact):
         return handle_error('Customer not found', 404)
 
     temp_password = create_temp_password()
-    temp_password_expiry = datetime.now() + timedelta(minutes=1)
+    temp_password_expiry = datetime.now() + timedelta(minutes=5)
 
     customer.temporary_password = temp_password
     customer.password_expiry = temp_password_expiry
     db.session.commit()
 
-    message = f"Your verification code is {temp_password}. It will expire in 1 minute."
+    message = f"Your verification code is {temp_password}. It will expire in 10 minutes."
     if is_valid_email(contact):
         send_email(customer.email, message)
     else:

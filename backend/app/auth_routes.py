@@ -16,8 +16,8 @@ PEPPER = app.config['SECRET_KEY']
 blacklist = set()
 
 # Customer Routes
-@app.route('/api/customers/signup', methods=['POST'])
-def create_customer():
+@app.route('/api/customers/requestotp', methods=['POST'])
+def request_otp():
     data = request.get_json()
     contact = data.get('contact')
 
@@ -25,33 +25,21 @@ def create_customer():
         return handle_error('Email or phone number is required', 400)
     
     customer = get_customer_by_contact(contact)
-    if customer:
-        return handle_error('Customer already exists', 409)
-
-    new_customer = Customers(
-        email=contact if is_valid_email(contact) else None,
-        phone=contact if is_valid_phone(contact) else None,
-    )
-    db.session.add(new_customer)
-    db.session.commit()
-
-    # Send OTP
-    return request_temp_password(contact)
-
-@app.route('/api/customers/login', methods=['POST'])
-def login_customer():
-    data = request.get_json()
-    contact = data.get('contact')
-    if not contact:
-        return handle_error('Email or phone number is required', 400)
     
-    customer = get_customer_by_contact(contact)
     if not customer:
-        return handle_error('Customer not found', 404)
+        new_customer = Customers(
+            email=contact if is_valid_email(contact) else None,
+            phone=contact if is_valid_phone(contact) else None,
+        )
+        db.session.add(new_customer)
+        db.session.commit()
+        customer = new_customer
     
-    return request_temp_password(contact)
+    if datetime.now() < customer.password_expiry or datetime.now() > customer.password_expiry:
+        # Generate a new OTP if the previous one has expired
+        return request_temp_password(contact)
 
-@app.route('/api/customers/verify', methods=['POST'])
+@app.route('/api/customers/verifyotp', methods=['POST'])
 def verify_otp():
     data = request.get_json()
     contact = data.get('contact')
@@ -73,6 +61,50 @@ def verify_otp():
 
     token = generate_jwt({'customer_id': customer.id, 'role': 'customer'})
     return jsonify({'message': 'OTP verified', 'token': token}), 200
+
+
+@app.route('/api/customers/update', methods=['POST'])
+def update_contact():
+    data = request.get_json()
+    customer_id = data.get('customer_id')
+    new_contact = data.get('new_contact')
+
+    if not customer_id or not new_contact:
+        return handle_error('Customer ID and new contact information are required', 400)
+    
+    customer = Customers.query.get(customer_id)
+    if not customer:
+        return handle_error('Customer not found', 404)
+    
+    if is_valid_email(new_contact):
+        # Check for existing email
+        if Customers.query.filter_by(email=new_contact).first():
+            return handle_error('Email is already in use', 409)
+        customer.email = new_contact
+    elif is_valid_phone(new_contact):
+        # Check for existing phone number
+        if Customers.query.filter_by(phone=new_contact).first():
+            return handle_error('Phone number is already in use', 409)
+        customer.phone = new_contact
+    else:
+        return handle_error('Invalid email or phone number format', 400)
+    
+    db.session.commit()
+    return handle_success('Contact information updated successfully')
+
+@app.route('/api/customers/login', methods=['POST'])
+def login_customer():
+    data = request.get_json()
+    contact = data.get('contact')
+    if not contact:
+        return handle_error('Email or phone number is required', 400)
+    
+    customer = get_customer_by_contact(contact)
+    if not customer:
+        return handle_error('Customer not found', 404)
+    
+    return request_temp_password(contact)
+
 
 # Employee Routes
 @app.route('/api/employees/signup', methods=['POST'])
