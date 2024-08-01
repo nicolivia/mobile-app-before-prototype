@@ -38,13 +38,12 @@ class Customers(db.Model):
 # Employees' database schema    
 class Employees(db.Model):
     __tablename__ = 'employees'
-    id = db.Column(db.Integer, autoincrement=True)
-    employee_id = db.Column(db.String(10), primary_key=True, unique=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    employee_id = db.Column(db.String(10), unique=True, nullable=False)
     full_name = db.Column(db.String(80), nullable=False)
     img_url = db.Column(db.String(200), nullable=True)
     password = db.Column(db.String(120), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-
 
     def to_json(self):
         return {
@@ -61,7 +60,7 @@ class Contacts(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(80), nullable=True)
     address = db.Column(db.String(200), nullable=True)
-    phone = db.Column(db.String(120), nullable=True, unique=True)
+    phone = db.Column(db.String(120), nullable=True)
         
     def to_json(self):
         return {

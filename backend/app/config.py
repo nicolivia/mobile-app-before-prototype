@@ -19,8 +19,8 @@ class Config:
     
     # Twilio configuration
     TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+    TWILIO_SERIVCE_SID = os.getenv('TWILIO_SERVICE_SID')
     TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
-    TWILIO_SERVICE_SID = os.getenv('TWILIO_SERVICE_SID')
     TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
     SENDGRID_API_KEY=os.getenv('SENDGRID_API_KEY')
     MAIL_FROM=os.getenv('MAIL_FROM')

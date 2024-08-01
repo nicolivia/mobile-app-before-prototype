@@ -18,7 +18,7 @@ def create_temp_password():
     return ''.join([str(random.randint(0, 9)) for _ in range(6)])
 
 # Send an OTP via SMS
-def send_sms(to, message):
+def send_sms(phone, message):
     account_sid = current_app.config['TWILIO_ACCOUNT_SID']
     auth_token = current_app.config['TWILIO_AUTH_TOKEN']
     twilio_phone_number = current_app.config['TWILIO_PHONE_NUMBER']    
@@ -27,7 +27,7 @@ def send_sms(to, message):
     message = client.messages.create(
         body=message,
         from_=twilio_phone_number,
-        to=to
+        to=phone
     )
     return message.sid
 

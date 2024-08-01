@@ -11,21 +11,25 @@ def save_contact():
     address = data.get('address')
     phone = data.get('phone')
     
-    print(f'Received id: {contact_id}')
-    print(f'Contact model ID type: {type(Contacts.id)}')
-    
-    if contact_id:
-        contact = Contacts.query.filter_by(id=contact_id).first()
-        if contact:
-            # Update contact
-            contact.name = name
-            contact.address = address
-            contact.phone = phone
-            db.session.commit()
-            return jsonify(contact.to_json()), 200
-        else:
-            # Add new contact
-            new_contact = Contacts(name=name, address=address, phone=phone)
-            db.session.add(new_contact)
-            db.session.commit()
-            return jsonify(new_contact.to_json()), 201
+    if not is_valid_phone(phone):
+        return jsonify({'error': 'Invalid phone number format'}), 400
+
+    try:
+        if contact_id:
+            contact = Contacts.query.filter_by(id=contact_id).first()
+            if contact:
+                # Update contact
+                contact.name = name
+                contact.address = address
+                contact.phone = phone
+                db.session.commit()
+                return jsonify(contact.to_json()), 200
+            else:
+                # Add new contact
+                new_contact = Contacts(name=name, address=address, phone=phone)
+                db.session.add(new_contact)
+                db.session.commit()
+                return jsonify(new_contact.to_json()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
