@@ -17,6 +17,12 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True
     
+    MYSQL_DATABASE= os.getenv('MYSQL_DATABASE')
+    MYSQL_USER = os.getenv('MYSQL_USER')
+    MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
+    MYSQL_ROOT_PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
+    DATABASE_URL = os.getenv('DATABASE_URL')
+    
     # Twilio configuration
     TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
     TWILIO_SERIVCE_SID = os.getenv('TWILIO_SERVICE_SID')
