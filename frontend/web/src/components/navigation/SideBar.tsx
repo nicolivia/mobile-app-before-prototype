@@ -5,7 +5,7 @@ import { Account } from '@/components'
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu'
 import { CiSettings, CiMedicalClipboard, CiCamera } from "react-icons/ci";
 
-const NavLinks = [
+const navLinks = [
     { icon: CiCamera, path: '', label: 'camera' },
     { icon: CiMedicalClipboard, path: '/dashboard', label: 'products' },
     { icon: CiSettings, path: '', label: 'settings' },
@@ -24,7 +24,7 @@ const SideBar: FC = (props: Props) => {
                 {/* Navigation Menu */}
                 <NavigationMenu className='w-full'>
                     <NavigationMenuList className='w-[156px] flex flex-col justify-center items-end gap-y-2'>
-                        {NavLinks.map((link, index) => (
+                        {navLinks.map((link, index) => (
                             <NavigationMenuItem key={index} className='flex justify-start w-full'>
                                 <Link href={link.path} passHref legacyBehavior>
                                     <NavigationMenuTrigger className='flex justify-start items-center w-full gap-x-3'>
@@ -43,7 +43,7 @@ const SideBar: FC = (props: Props) => {
             </div>
 
             {/* Logo */}
-            <div className="flex flex-col items-center mt-10">
+            <div className="flex flex-col items-center mb-8">
                 <Image src="/images/logo.png" alt="mediscan logo" width={34} height={46} />
             </div>
         </aside>
