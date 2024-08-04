@@ -1,16 +1,16 @@
 'use client'
 
-import React from 'react'
+import { FC } from 'react'
 import { SideBar } from '@/components'
 
 type Props = {}
 
-const DashboardPage = (props: Props) => {
+const DashboardPage: FC = (props: Props) => {
     return (
-        <div className='bg-custom-gradient w-full min-h-screen flex items-center justify-even p-4'>
+        <div className='bg-custom-gradient w-full h-screen flex items-center justify-even overflow-hidden p-3'>
             <SideBar />
 
-            <div>DashboardPage</div>
+            <div className="ml-4 flex-grow h-full">DashboardPage</div>
         </div>
     )
 }

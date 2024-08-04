@@ -11,7 +11,7 @@ const Account: FC = (props: Props) => {
     return (
         <Card className='w-full border-background shadow-none'>
             <CardContent className='flex flex-col justify-start p-0 border-background'>
-                <div className='flex gap-x-2 border-background'>
+                <div className='flex gap-x-3 border-background'>
                     <Avatar>
                         <AvatarImage src="/images/default-avatar.png" alt="Avatar" />
                         <AvatarFallback>MS</AvatarFallback>
