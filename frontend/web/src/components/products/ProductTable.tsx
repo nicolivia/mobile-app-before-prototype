@@ -63,8 +63,8 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
 
     return (
         <div>
-            <div className='bg-white p-2 rounded-3xl mt-5 flex flex-col items-end'>
-                <div className="w-full flex justify-end">
+            <div className='min-h-[730px] bg-white py-2 rounded-3xl mt-5 flex flex-col items-end'>
+                <div className="w-full flex justify-end my-4">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <div className="w-[150px] flex justify-between items-center my-3 mr-3 border rounded-lg">
@@ -100,10 +100,10 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
                     </DropdownMenu>
                     <div className="w-[270px] flex justify-between items-center my-3 mr-3 border rounded-lg">
                         <input
-                            placeholder="Search products by name or ID"
-                            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+                            placeholder="Search products by product name or ID"
+                            value={(table.getColumn('productName')?.getFilterValue() as string) ?? ''}
                             onChange={(event) =>
-                                table.getColumn('name')?.setFilterValue(event.target.value)
+                                table.getColumn('productName')?.setFilterValue(event.target.value)
                             }
                             className="w-full p-3 max-w-sm text-sm bg-transparent focus:outline-none"
                         />
@@ -118,7 +118,7 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
                             <TableRow key={headerGroup.id} className=''>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id} className="bg-background hover:bg-background text-center">
+                                        <TableHead key={header.id} className="py-3 bg-background hover:bg-background text-center">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -135,7 +135,7 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
                         {table.getRowModel().rows.map(row => (
                             <TableRow key={row.id} onClick={() => onRowClick(row.original)}>
                                 {row.getVisibleCells().map(cell => (
-                                    <TableHead key={cell.id} className="text-center">
+                                    <TableHead key={cell.id} className="text-center py-1">
                                         {flexRender(
                                             cell.column.columnDef.cell,
                                             cell.getContext()

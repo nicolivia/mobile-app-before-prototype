@@ -3,13 +3,17 @@
 import { FC, useState, ChangeEvent } from 'react'
 import { CiSearch } from 'react-icons/ci'
 
-const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
-    const [searchQuery, setSearchQuery] = useState<string>('');
+type SearchBarProps = {
+    onSearch: (query: string) => void;
+}
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setSearchQuery(query);
-        onSearch(query);
+const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
+    const [query, setQuery] = useState('')
+
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const newQuery = event.target.value
+        setQuery(newQuery)
+        onSearch(newQuery)
     }
 
     return (
@@ -17,7 +21,7 @@ const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
             <label className='input rounded-lg flex items-center gap-x-2 bg-secondary/30 focus-within:border-primary focus:outline-none border border-primary'>
                 <input
                     type='text'
-                    value={searchQuery}
+                    value={query}
                     onChange={handleInputChange}
                     className='text-sm py-2 px-3 focus:outline-none focus:border-none bg-transparent'
                     placeholder="Please enter keywords..."
@@ -29,7 +33,3 @@ const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
 }
 
 export default SearchBar
-
-type SearchBarProps = {
-    onSearch: (query: string) => void;
-}

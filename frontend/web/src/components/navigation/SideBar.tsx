@@ -14,7 +14,7 @@ type Props = {}
 
 const SideBar: FC = (props: Props) => {
     return (
-        <aside className='flex flex-col justify-between w-52 h-full py-6 px-2 rounded-3xl bg-background shadow-lg overflow-hidden'>
+        <aside className='flex flex-col justify-between min-w-52 h-full py-6 px-2 rounded-3xl bg-background shadow-lg overflow-hidden'>
             <div className='w-full'>
                 {/* Account Section */}
                 <div className='w-full mb-10'>

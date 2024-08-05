@@ -7,8 +7,9 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { Product } from '../products/ProductColumns'
 
-const BreadcrumbPath: FC = () => {
+const BreadcrumbPath: FC<Props> = ({ selectedCategory, selectedProduct }) => {
     return (
         <Breadcrumb>
             <BreadcrumbList>
@@ -19,41 +20,32 @@ const BreadcrumbPath: FC = () => {
                 <BreadcrumbItem>
                     <BreadcrumbLink href="/dashboard">All</BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="/dashboard">Therapeutic</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="/dashboard">Formulation</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="/dashboard">Systemic</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="/dashboard">Usage Duration</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="/dashboard">Prescription Status</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="/dashboard">Target Population</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                    <BreadcrumbLink href="/dashboard">DrugClasses</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                    <BreadcrumbPage>Detail</BreadcrumbPage>
-                </BreadcrumbItem>
+                {selectedCategory && (
+                    <>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href={`/dashboard?category=${selectedCategory}`}>
+                                {selectedCategory}
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                    </>
+                )}
+                {selectedProduct && (
+                    <>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>{selectedProduct.productName}</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </>
+                )}
             </BreadcrumbList>
         </Breadcrumb>
     )
 }
 
 export default BreadcrumbPath
+
+type Props = {
+    selectedCategory: string | null
+    selectedProduct: Product | null
+}

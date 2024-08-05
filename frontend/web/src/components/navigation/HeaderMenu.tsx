@@ -9,23 +9,32 @@ import {
     MenubarMenu,
     MenubarTrigger,
 } from '@/components/ui/menubar'
+import { Product } from '@/components/products/ProductColumns'
+import { DetailProduct } from '@/utils/index'
 
-const HeaderMenu: FC = () => {
-    const [selectedCategory, setSelectedCategory] = useState<string>('All');
-    const [medicines, setMedicines] = useState<string[]>([]);
-    const [filteredMedicines, setFilteredMedicines] = useState<string[]>([]);
+interface HeaderMenuProps {
+    products: Product[]
+    detailData: DetailProduct[]
+    setFilteredProducts: (products: Product[]) => void
+    onCategoryChange: (category: string, subCategory?: string) => void;
+}
 
-    const handleCategoryChange = (category: keyof Categories) => {
-        setSelectedCategory(category as string);
+const HeaderMenu: FC<HeaderMenuProps> = ({ products, detailData, setFilteredProducts, onCategoryChange }) => {
+    const handleCategoryChange = (category: string, subCategory?: string) => {
+        onCategoryChange(category, subCategory);
     }
 
     const handleSearch = (query: string) => {
         if (query === '') {
-            setFilteredMedicines(medicines);
+            setFilteredProducts(products);
         } else {
             const lowerCaseQuery = query.toLowerCase();
-            const filtered = medicines.filter(medicine => medicine.toLowerCase().includes(lowerCaseQuery));
-            setFilteredMedicines(filtered);
+            const filtered = products.filter(product =>
+                product.productName.toLowerCase().includes(lowerCaseQuery) ||
+                product.brandName.toLowerCase().includes(lowerCaseQuery) ||
+                product.genericName.toLowerCase().includes(lowerCaseQuery)
+            );
+            setFilteredProducts(filtered);
         }
     }
 
@@ -35,16 +44,18 @@ const HeaderMenu: FC = () => {
                 {Object.keys(categories).map((category) => (
                     <MenubarMenu key={category}>
                         <MenubarTrigger
-                            onClick={() => handleCategoryChange(category as keyof Categories)}
+                            onClick={() => handleCategoryChange(category)}
                             className='flex justify-center items-center rounded-lg py-3 px-5 cursor-pointer'
                         >
                             {category}
                         </MenubarTrigger>
                         {category !== 'All' && (
                             <MenubarContent>
-                                {categories[category].map((medicine) => (
-                                    <Fragment key={medicine}>
-                                        <MenubarItem>{medicine}</MenubarItem>
+                                {categories[category].map((subCategory) => (
+                                    <Fragment key={subCategory}>
+                                        <MenubarItem onClick={() => handleCategoryChange(category, subCategory)}>
+                                            {subCategory}
+                                        </MenubarItem>
                                     </Fragment>
                                 ))}
                             </MenubarContent>
