@@ -33,9 +33,10 @@ import {
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    onRowClick: (row: TData) => void
 }
 
-const ProductTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) => {
+const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTableProps<TData, TValue>) => {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -132,7 +133,7 @@ const ProductTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TV
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows.map(row => (
-                            <TableRow key={row.id}>
+                            <TableRow key={row.id} onClick={() => onRowClick(row.original)}>
                                 {row.getVisibleCells().map(cell => (
                                     <TableHead key={cell.id} className="text-center">
                                         {flexRender(
