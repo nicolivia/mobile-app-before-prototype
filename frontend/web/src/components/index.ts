@@ -12,6 +12,8 @@ import SideBar from './navigation/SideBar'
 import SortData from './sorting/SortData'
 import ThemeProvider from './themes/ThemeProvider'
 import ThemeToggler from './themes/ThemeToggler'
+import CameraSection from './webcam/CameraSection'
+import SettingsModal from './modals/SettingsModal'
 
 export {
     Account,
@@ -28,4 +30,6 @@ export {
     SortData,
     ThemeProvider,
     ThemeToggler,
+    CameraSection,
+    SettingsModal,
 }

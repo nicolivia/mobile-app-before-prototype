@@ -1,11 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { SideBar, HeaderMenu, BreadcrumbPath, ProductTable, ProductDetail } from '@/components'
+import { SideBar, HeaderMenu, BreadcrumbPath, ProductTable, ProductDetail, CameraSection } from '@/components'
 import { Product, columns } from '@/components/products/ProductColumns'
-import { getData, getDetailData } from '@/utils/index'
-import { DetailProduct } from '@/utils/index'
-import { motion } from 'framer-motion'
+import { getData, getDetailData, DetailProduct } from '@/utils/index'
 
 const DashboardPage = () => {
     const [data, setData] = useState<Product[]>([])
@@ -14,6 +12,9 @@ const DashboardPage = () => {
     const [filteredData, setFilteredData] = useState<Product[]>([])
     const [selectedCategory, setSelectedCategory] = useState<string>('All')
     const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null)
+    const [isCamera, setIsCamera] = useState(false)
+    const [isProducts, setIsProducts] = useState(true)
+
 
 
     useEffect(() => {
@@ -62,20 +63,35 @@ const DashboardPage = () => {
         }
     }
 
+    const handleToggleCamera = () => {
+        setIsCamera(true)
+        setIsProducts(false)
+    }
+
+    const handleShowProducts = () => {
+        setIsCamera(false)
+        setIsProducts(true)
+    }
+
     return (
         <div className='bg-custom-gradient w-full h-screen flex items-center justify-even overflow-hidden p-3'>
-            <SideBar />
+            <SideBar onToggleCamera={handleToggleCamera} onShowProducts={handleShowProducts} />
 
             <div className="ml-2 flex-grow h-full relative">
-                <HeaderMenu products={data} detailData={detailData} setFilteredProducts={setFilteredData} onCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
-                <div className='pt-24 ml-2'>
-                    <BreadcrumbPath selectedCategory={selectedCategory} selectedSubCategory={selectedSubCategory} selectedProduct={selectedProduct} />
-                    {selectedProduct ?
-                        <ProductDetail detailData={detailData} selectedProduct={selectedProduct} onClose={() => setSelectedProduct(null)} />
-                        :
-                        <ProductTable columns={columns} data={filteredData} onRowClick={handleRowClick} />
-                    }
-                </div>
+                {isCamera && <CameraSection />}
+                {isProducts && (
+                    <>
+                        <HeaderMenu products={data} detailData={detailData} setFilteredProducts={setFilteredData} onCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
+                        <div className='pt-24 ml-2'>
+                            <BreadcrumbPath selectedCategory={selectedCategory} selectedSubCategory={selectedSubCategory} selectedProduct={selectedProduct} />
+                            {selectedProduct ?
+                                <ProductDetail detailData={detailData} selectedProduct={selectedProduct} onClose={() => setSelectedProduct(null)} />
+                                :
+                                <ProductTable columns={columns} data={filteredData} onRowClick={handleRowClick} />
+                            }
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     )
