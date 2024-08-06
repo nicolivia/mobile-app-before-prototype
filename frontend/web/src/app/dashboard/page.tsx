@@ -12,7 +12,9 @@ const DashboardPage = () => {
     const [detailData, setDetailData] = useState<DetailProduct[]>([])
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [filteredData, setFilteredData] = useState<Product[]>([])
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+    const [selectedCategory, setSelectedCategory] = useState<string>('All')
+    const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null)
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,6 +43,7 @@ const DashboardPage = () => {
 
     const handleCategoryChange = (category: string, subCategory?: string) => {
         setSelectedCategory(category)
+        setSelectedSubCategory(subCategory || null)
 
         if (category === 'All') {
             setFilteredData(data)
@@ -64,9 +67,9 @@ const DashboardPage = () => {
             <SideBar />
 
             <div className="ml-2 flex-grow h-full relative">
-                <HeaderMenu products={data} detailData={detailData} setFilteredProducts={setFilteredData} onCategoryChange={handleCategoryChange} />
+                <HeaderMenu products={data} detailData={detailData} setFilteredProducts={setFilteredData} onCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
                 <div className='pt-24 ml-2'>
-                    <BreadcrumbPath selectedCategory={selectedCategory} selectedProduct={selectedProduct} />
+                    <BreadcrumbPath selectedCategory={selectedCategory} selectedSubCategory={selectedSubCategory} selectedProduct={selectedProduct} />
                     {selectedProduct ?
                         <ProductDetail detailData={detailData} selectedProduct={selectedProduct} onClose={() => setSelectedProduct(null)} />
                         :

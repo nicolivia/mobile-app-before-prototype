@@ -113,6 +113,7 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
                     </div>
                 </div>
                 <Table>
+                    {/* Columns */}
                     <TableHeader>
                         {table.getHeaderGroups()?.map((headerGroup) => (
                             <TableRow key={headerGroup.id} className=''>
@@ -131,6 +132,7 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
                             </TableRow>
                         ))}
                     </TableHeader>
+                    {/* Rows */}
                     <TableBody>
                         {table.getRowModel().rows.map(row => (
                             <TableRow key={row.id} onClick={() => onRowClick(row.original)}>

@@ -26,8 +26,9 @@ const ProductDetail: FC<ProductDetailProps> = ({ detailData, selectedProduct, on
             transition={{ duration: 0.5 }}
             className='w-full h-full relative'
         >
+            {/* Close button */}
             <Button
-                className='absolute -top-12 right-0 bg-impact rounded-xl hover:bg-impact/80'
+                className='absolute -top-12 right-5 bg-impact rounded-xl hover:bg-impact/80'
                 onClick={onClose}
             >
                 Close
@@ -127,7 +128,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ detailData, selectedProduct, on
                 <ChartContainer config={chartConfig} className="w-full max-h-[250px] bg-white p-3 mt-3 rounded-3xl">
                     <div className='w-full flex justify-between px-3'>
                         <h2 className='w-full text-lg font-bold text-impact mb-2'>Stock Levels Over Time</h2>
-                        <div className='flex justify-end w-60 text-md text-primary mb-4 text-right bg-secondary rounded-lg p-2'>
+                        <div className='flex justify-end w-40 text-md text-primary mb-4 text-right bg-secondary rounded-lg p-2'>
                             <h2 className='mr-3'>Current Stock:</h2>
                             {stockData.map((entry, index) => (
                                 <strong key={`cell-${index}`}>
