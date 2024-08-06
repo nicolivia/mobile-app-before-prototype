@@ -40,6 +40,8 @@ const DashboardPage = () => {
 
     const handleRowClick = (product: Product) => {
         setSelectedProduct(product)
+        setIsCamera(false)
+        setIsProducts(true)
     }
 
     const handleCategoryChange = (category: string, subCategory?: string) => {
@@ -66,11 +68,13 @@ const DashboardPage = () => {
     const handleToggleCamera = () => {
         setIsCamera(true)
         setIsProducts(false)
+        setSelectedProduct(null)
     }
 
     const handleShowProducts = () => {
         setIsCamera(false)
         setIsProducts(true)
+        setSelectedProduct(null)
     }
 
     return (
