@@ -78,7 +78,7 @@ const DashboardPage = () => {
             <SideBar onToggleCamera={handleToggleCamera} onShowProducts={handleShowProducts} />
 
             <div className="ml-2 flex-grow h-full relative">
-                {isCamera && <CameraSection />}
+                {isCamera && <CameraSection data={data} onRowClick={handleRowClick} />}
                 {isProducts && (
                     <>
                         <HeaderMenu products={data} detailData={detailData} setFilteredProducts={setFilteredData} onCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
