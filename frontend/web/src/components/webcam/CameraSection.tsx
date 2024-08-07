@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Button } from '../ui/button'
 import { Product } from '@/components/products/ProductColumns'
-import { clear } from 'console'
 
 interface DataTableProps {
     onRowClick: (row: Product) => void

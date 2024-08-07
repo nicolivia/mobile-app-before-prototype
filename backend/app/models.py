@@ -3,7 +3,6 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-# Customers' database schema
 class Customers(db.Model):
     __tablename__ = 'customers'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -35,7 +34,6 @@ class Customers(db.Model):
             'updatedAt': self.updated_at
         }
 
-# Employees' database schema    
 class Employees(db.Model):
     __tablename__ = 'employees'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -53,15 +51,14 @@ class Employees(db.Model):
             'imgUrl': self.img_url,
             'createdAt': self.created_at,
         }
-        
-# Emergency contacts' database schema    
+
 class Contacts(db.Model):
     __tablename__ = 'contacts'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(80), nullable=True)
     address = db.Column(db.String(200), nullable=True)
     phone = db.Column(db.String(120), nullable=True)
-        
+
     def to_json(self):
         return {
             'id': self.id,
@@ -69,19 +66,39 @@ class Contacts(db.Model):
             'address': self.address,
             'phone': self.phone,
         }
-        
-# Products' database schema
+
 class Products(db.Model):
     __tablename__ = 'products'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    product_id = db.Column(db.String(30), unique=True, nullable=False)
-    category_name = db.Column(db.String(80), nullable=False)
+    product_name = db.Column(db.String(80), nullable=False)
     brand_name = db.Column(db.String(80), nullable=False)
-    name = db.Column(db.String(80), nullable=False, unique=True)
+    generic_name = db.Column(db.String(80), nullable=True)
+    manufacturer = db.Column(db.String(80), nullable=True)
     price = db.Column(db.Float, nullable=False)
-    prescription = db.Column(db.Text, nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    expiry_date = db.Column(db.Date, nullable=False)
+    stock = db.Column(db.Integer, nullable=False)
+    since = db.Column(db.DateTime, nullable=True)
+    updated = db.Column(db.DateTime, nullable=True)
+    active_ingredients = db.Column(db.Text, nullable=True)
+    inactive_ingredients = db.Column(db.Text, nullable=True)
+    therapeutic_class = db.Column(db.String(80), nullable=True)
+    formulation = db.Column(db.String(80), nullable=True)
+    systemic_category = db.Column(db.String(80), nullable=True)
+    usage_duration = db.Column(db.String(80), nullable=True)
+    target_population = db.Column(db.String(80), nullable=True)
+    drug_class = db.Column(db.String(80), nullable=True)
+    strength = db.Column(db.String(80), nullable=True)
+    dosage = db.Column(db.String(80), nullable=True)
+    route_of_administration = db.Column(db.String(80), nullable=True)
+    indications = db.Column(db.Text, nullable=True)
+    contraindications = db.Column(db.Text, nullable=True)
+    side_effects = db.Column(db.Text, nullable=True)
+    interactions = db.Column(db.Text, nullable=True)
+    warnings = db.Column(db.Text, nullable=True)
+    storage_conditions = db.Column(db.Text, nullable=True)
+    approval_date = db.Column(db.DateTime, nullable=True)
+    expiry_date = db.Column(db.DateTime, nullable=False)
+    batch_number = db.Column(db.String(80), nullable=True)
+    description = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
@@ -90,20 +107,40 @@ class Products(db.Model):
     def to_json(self):
         return {
             'id': self.id,
-            'productId': self.product_id,
-            'categoryName': self.category_name,
+            'productName': self.product_name,
             'brandName': self.brand_name,
-            'name': self.name,
+            'genericName': self.generic_name,
+            'manufacturer': self.manufacturer,
             'price': self.price,
-            'prescription': self.prescription,
-            'quantity': self.quantity,
+            'stock': self.stock,
+            'since': self.since,
+            'updated': self.updated,
+            'activeIngredients': self.active_ingredients,
+            'inactiveIngredients': self.inactive_ingredients,
+            'therapeuticClass': self.therapeutic_class,
+            'formulation': self.formulation,
+            'systemicCategory': self.systemic_category,
+            'usageDuration': self.usage_duration,
+            'targetPopulation': self.target_population,
+            'drugClass': self.drug_class,
+            'strength': self.strength,
+            'dosage': self.dosage,
+            'routeOfAdministration': self.route_of_administration,
+            'indications': self.indications,
+            'contraindications': self.contraindications,
+            'sideEffects': self.side_effects,
+            'interactions': self.interactions,
+            'warnings': self.warnings,
+            'storageConditions': self.storage_conditions,
+            'approvalDate': self.approval_date,
             'expiryDate': self.expiry_date,
+            'batchNumber': self.batch_number,
+            'description': self.description,
             'createdAt': self.created_at,
             'updatedAt': self.updated_at,
             'images': [image.to_json() for image in self.images]
         }
-        
-# Products' database schema
+
 class ProductImage(db.Model):
     __tablename__ = 'product_images'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

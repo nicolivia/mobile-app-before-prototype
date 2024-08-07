@@ -1,6 +1,5 @@
-# Required imports and setups
-from flask import request, jsonify, current_app
-from app.app import app, db
+from flask import Blueprint, request, jsonify, current_app
+from app.app import db
 from app.models import Customers, Employees
 from utils.otp import request_temp_password
 from utils.jwt import generate_jwt, blacklist_jwt
@@ -8,15 +7,14 @@ from utils.validation import is_valid_email, is_valid_phone, get_customer_by_con
 from utils.status import handle_error, handle_success
 from datetime import datetime
 from flask_bcrypt import Bcrypt
-import jwt
 
-# Global setup
-bcrypt = Bcrypt(app)
-PEPPER = app.config['SECRET_KEY']
+bp = Blueprint('auth', __name__)
+bcrypt = Bcrypt()
+PEPPER = "your_secret_key"  # Replace with app.config['SECRET_KEY']
 blacklist = set()
 
 # Customer Routes
-@app.route('/api/customers/requestotp', methods=['POST'])
+@bp.route('/api/customers/requestotp', methods=['POST'])
 def request_otp():
     data = request.get_json()
     contact = data.get('contact')
@@ -35,11 +33,11 @@ def request_otp():
         db.session.commit()
         customer = new_customer
     
-    if datetime.now() < customer.password_expiry or datetime.now() > customer.password_expiry:
+    if customer.password_expiry is None or datetime.now() > customer.password_expiry:
         # Generate a new OTP if the previous one has expired
         return request_temp_password(contact)
 
-@app.route('/api/customers/verifyotp', methods=['POST'])
+@bp.route('/api/customers/verifyotp', methods=['POST'])
 def verify_otp():
     data = request.get_json()
     contact = data.get('contact')
@@ -62,8 +60,7 @@ def verify_otp():
     token = generate_jwt({'customer_id': customer.id, 'role': 'customer'})
     return jsonify({'message': 'OTP verified', 'token': token}), 200
 
-
-@app.route('/api/customers/update', methods=['POST'])
+@bp.route('/api/customers/update', methods=['POST'])
 def update_contact():
     data = request.get_json()
     customer_id = data.get('customer_id')
@@ -92,7 +89,7 @@ def update_contact():
     db.session.commit()
     return handle_success('Contact information updated successfully')
 
-@app.route('/api/customers/login', methods=['POST'])
+@bp.route('/api/customers/login', methods=['POST'])
 def login_customer():
     data = request.get_json()
     contact = data.get('contact')
@@ -105,9 +102,8 @@ def login_customer():
     
     return request_temp_password(contact)
 
-
 # Employee Routes
-@app.route('/api/employees/signup', methods=['POST'])
+@bp.route('/api/employees/signup', methods=['POST'])
 def create_employee():
     data = request.get_json()
     employee_id = data.get('employee_id')
@@ -140,7 +136,7 @@ def create_employee():
     token = generate_jwt({'employee_id': new_employee.employee_id, 'role': 'employee'})
     return jsonify({'message': 'Employee created successfully', 'token': token}), 201
 
-@app.route('/api/employees/login', methods=['POST'])
+@bp.route('/api/employees/login', methods=['POST'])
 def login_employee():
     data = request.get_json()
     employee_id = data.get('employee_id')
@@ -164,7 +160,7 @@ def login_employee():
 
 # Common Routes
 # Logout
-@app.route('/api/users/logout', methods=['POST'])
+@bp.route('/api/users/logout', methods=['POST'])
 def logout_user():
     auth_header = request.headers.get('Authorization')
     if auth_header:
@@ -173,7 +169,7 @@ def logout_user():
     return handle_success('Logout successful')
 
 # Get personal data
-@app.route('/api/users/me', methods=['GET'])
+@bp.route('/api/users/me', methods=['GET'])
 def get_me():
     auth_header = request.headers.get('Authorization')
     if not auth_header:
