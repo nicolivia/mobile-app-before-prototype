@@ -3,6 +3,7 @@ import { FC, ReactNode } from 'react'
 import { Manrope } from "next/font/google"
 import '@/app/globals.css'
 import { ThemeProvider } from '@/components'
+import { Toaster } from '@/components/ui/toaster'
 
 const manrope = Manrope({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
           disableTransitionOnChange
         >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

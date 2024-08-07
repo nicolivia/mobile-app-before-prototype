@@ -1,31 +1,30 @@
 import { FC } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { ProfileEditor } from '@/components'
+import { ProfileEditor, AccountModal } from '@/components'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent, CardDescription } from '@/components/ui/card'
+import { Popover, PopoverTrigger } from '@/components/ui/popover'
 
 type Props = {}
 
 const Account: FC = (props: Props) => {
     return (
-        <Card className='w-full border-background shadow-none'>
-            <CardContent className='flex flex-col justify-start p-0 border-background'>
-                <div className='flex gap-x-3 border-background'>
+        <Popover>
+            <PopoverTrigger className='w-full flex flex-col justify-start p-0 border-background'>
+                <div className='w-full flex gap-x-3 border-background p-2 hover:bg-accent hover:text-accent-foreground rounded-md cursor-pointer'>
                     <Avatar>
                         <AvatarImage src="/images/default-avatar.png" alt="Avatar" />
                         <AvatarFallback>MS</AvatarFallback>
                     </Avatar>
                     <div className='flex flex-col'>
                         <span className='text-sm font-semibold'>Simon Powel</span>
-                        <CardDescription>0123456789</CardDescription>
+                        <span>0123456789</span>
                     </div>
                 </div>
-                <div className='text-right'>
+                <div className='w-full text-right'>
                     <ProfileEditor />
                 </div>
-            </CardContent>
-        </Card>
+            </PopoverTrigger>
+            <AccountModal />
+        </Popover>
     )
 }
 

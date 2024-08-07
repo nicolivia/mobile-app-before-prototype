@@ -3,8 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Account, SettingsModal } from '@/components'
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { CiSettings, CiMedicalClipboard, CiCamera, CiLogout } from "react-icons/ci";
+import { Popover, PopoverTrigger } from '@/components/ui/popover'
+import { CiSettings, CiMedicalClipboard, CiCamera } from "react-icons/ci";
 
 const SideBar: FC<SideBarProps> = ({ onToggleCamera, onShowProducts }) => {
     const handleClick = (label: string) => {
@@ -32,12 +32,12 @@ const SideBar: FC<SideBarProps> = ({ onToggleCamera, onShowProducts }) => {
                                     <Popover key={index}>
                                         <PopoverTrigger
                                             onClick={() => handleClick(link.label)}
-                                            className='flex justify-start items-center w-full gap-x-3 py-2 px-4'
+                                            className='flex justify-start items-center w-full gap-x-3 py-2 px-4 hover:bg-accent hover:text-accent-foreground rounded-md'
                                         >
                                             <div className='w-6 h-6 flex justify-center items-center'>
                                                 <link.icon className='w-5 h-auto' />
                                             </div>
-                                            <span className='text-sm capitalize'>
+                                            <span className='text-sm capitalize font-light'>
                                                 {link.label}
                                             </span>
                                         </PopoverTrigger>
@@ -53,7 +53,7 @@ const SideBar: FC<SideBarProps> = ({ onToggleCamera, onShowProducts }) => {
                                                 <div className='w-6 h-6 flex justify-center items-center'>
                                                     <link.icon className='w-5 h-auto' />
                                                 </div>
-                                                <span className='text-sm capitalize'>
+                                                <span className='text-sm capitalize font-light'>
                                                     {link.label}
                                                 </span>
                                             </NavigationMenuTrigger>
