@@ -2,6 +2,8 @@
 
 import { FC, useState, Fragment } from 'react'
 import SearchBar from '../SearchBar'
+import { Product } from '@/components/products/ProductColumns'
+import { DetailProduct } from '@/utils/index'
 import {
     Menubar,
     MenubarContent,
@@ -9,17 +11,16 @@ import {
     MenubarMenu,
     MenubarTrigger,
 } from '@/components/ui/menubar'
-import { Product } from '@/components/products/ProductColumns'
-import { DetailProduct } from '@/utils/index'
 
 interface HeaderMenuProps {
     products: Product[]
     detailData: DetailProduct[]
     setFilteredProducts: (products: Product[]) => void
     onCategoryChange: (category: string, subCategory?: string) => void;
+    selectedCategory: string
 }
 
-const HeaderMenu: FC<HeaderMenuProps> = ({ products, detailData, setFilteredProducts, onCategoryChange }) => {
+const HeaderMenu: FC<HeaderMenuProps> = ({ products, selectedCategory, setFilteredProducts, onCategoryChange }) => {
     const handleCategoryChange = (category: string, subCategory?: string) => {
         onCategoryChange(category, subCategory);
     }
@@ -40,12 +41,12 @@ const HeaderMenu: FC<HeaderMenuProps> = ({ products, detailData, setFilteredProd
 
     return (
         <div className='absolute -top-3 -right-3 w-full h-20 p-10 flex justify-between items-center shadow-lg rounded-bl-3xl bg-white'>
-            <Menubar className='border-none shadow-none bg-inherit'>
+            <Menubar className='w-full border-none shadow-none flex justify-evenly bg-transparent'>
                 {Object.keys(categories).map((category) => (
                     <MenubarMenu key={category}>
                         <MenubarTrigger
                             onClick={() => handleCategoryChange(category)}
-                            className='flex justify-center items-center rounded-lg py-3 px-5 cursor-pointer'
+                            className={`flex justify-center items-center rounded-lg py-3 px-5 cursor-pointer ${selectedCategory === category ? 'bg-primary text-white' : ''}`}
                         >
                             {category}
                         </MenubarTrigger>

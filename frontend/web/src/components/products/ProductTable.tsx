@@ -61,6 +61,10 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
         },
     });
 
+    const handleReset = () => {
+        table.getColumn('productName')?.setFilterValue('')
+    }
+
     return (
         <div>
             <div className='min-h-[730px] bg-white py-2 rounded-3xl mt-5 flex flex-col items-end'>
@@ -98,7 +102,10 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
                                 })}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <div className="w-[270px] flex justify-between items-center my-3 mr-3 border rounded-lg">
+                    <form
+                        onReset={handleReset}
+                        className='w-[270px] flex justify-between items-center my-3 mr-3 border rounded-lg'
+                    >
                         <input
                             placeholder="Search products by product name or ID"
                             value={(table.getColumn('productName')?.getFilterValue() as string) ?? ''}
@@ -107,12 +114,13 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
                             }
                             className="w-full p-3 max-w-sm text-sm bg-transparent focus:outline-none"
                         />
-                        <div className='mr-4 flex justify-center items-center'>
-                            <Image src='/images/cross.png' alt='delete' width={8} height={8} />
-                        </div>
-                    </div>
+                        <button type='reset' className='w-7 h-7 p-2 mr-4 flex justify-center items-center focus:outline-none cursor-pointer'>
+                            <Image src='/images/cross.png' alt='delete' width={20} height={20} />
+                        </button>
+                    </form>
                 </div>
                 <Table>
+                    {/* Columns */}
                     <TableHeader>
                         {table.getHeaderGroups()?.map((headerGroup) => (
                             <TableRow key={headerGroup.id} className=''>
@@ -131,6 +139,7 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
                             </TableRow>
                         ))}
                     </TableHeader>
+                    {/* Rows */}
                     <TableBody>
                         {table.getRowModel().rows.map(row => (
                             <TableRow key={row.id} onClick={() => onRowClick(row.original)}>

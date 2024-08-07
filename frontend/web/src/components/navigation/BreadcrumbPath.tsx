@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Product } from '../products/ProductColumns'
 
-const BreadcrumbPath: FC<Props> = ({ selectedCategory, selectedProduct }) => {
+const BreadcrumbPath: FC<Props> = ({ selectedCategory, selectedSubCategory, selectedProduct }) => {
     return (
         <Breadcrumb>
             <BreadcrumbList>
@@ -20,12 +20,22 @@ const BreadcrumbPath: FC<Props> = ({ selectedCategory, selectedProduct }) => {
                 <BreadcrumbItem>
                     <BreadcrumbLink href="/dashboard">All</BreadcrumbLink>
                 </BreadcrumbItem>
-                {selectedCategory && (
+                {selectedCategory && selectedCategory !== 'All' && (
                     <>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
                             <BreadcrumbLink href={`/dashboard?category=${selectedCategory}`}>
                                 {selectedCategory}
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                    </>
+                )}
+                {selectedSubCategory && (
+                    <>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href={`/dashboard?category=${selectedCategory}&subcategory=${selectedSubCategory}`}>
+                                {selectedSubCategory}
                             </BreadcrumbLink>
                         </BreadcrumbItem>
                     </>
@@ -47,5 +57,6 @@ export default BreadcrumbPath
 
 type Props = {
     selectedCategory: string | null
+    selectedSubCategory: string | null
     selectedProduct: Product | null
 }

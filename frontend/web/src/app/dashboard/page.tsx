@@ -1,18 +1,19 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { SideBar, HeaderMenu, BreadcrumbPath, ProductTable, ProductDetail } from '@/components'
+import { SideBar, HeaderMenu, BreadcrumbPath, ProductTable, ProductDetail, CameraSection } from '@/components'
 import { Product, columns } from '@/components/products/ProductColumns'
-import { getData, getDetailData } from '@/utils/index'
-import { DetailProduct } from '@/utils/index'
-import { motion } from 'framer-motion'
+import { getData, getDetailData, DetailProduct } from '@/utils/index'
 
 const DashboardPage = () => {
     const [data, setData] = useState<Product[]>([])
     const [detailData, setDetailData] = useState<DetailProduct[]>([])
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [filteredData, setFilteredData] = useState<Product[]>([])
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+    const [selectedCategory, setSelectedCategory] = useState<string>('All')
+    const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null)
+    const [isCamera, setIsCamera] = useState(false)
+    const [isProducts, setIsProducts] = useState(true)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,10 +38,13 @@ const DashboardPage = () => {
 
     const handleRowClick = (product: Product) => {
         setSelectedProduct(product)
+        setIsCamera(false)
+        setIsProducts(true)
     }
 
     const handleCategoryChange = (category: string, subCategory?: string) => {
         setSelectedCategory(category)
+        setSelectedSubCategory(subCategory || null)
 
         if (category === 'All') {
             setFilteredData(data)
@@ -59,20 +63,37 @@ const DashboardPage = () => {
         }
     }
 
+    const handleToggleCamera = () => {
+        setIsCamera(true)
+        setIsProducts(false)
+        setSelectedProduct(null)
+    }
+
+    const handleShowProducts = () => {
+        setIsCamera(false)
+        setIsProducts(true)
+        setSelectedProduct(null)
+    }
+
     return (
         <div className='bg-custom-gradient w-full h-screen flex items-center justify-even overflow-hidden p-3'>
-            <SideBar />
+            <SideBar onToggleCamera={handleToggleCamera} onShowProducts={handleShowProducts} />
 
             <div className="ml-2 flex-grow h-full relative">
-                <HeaderMenu products={data} detailData={detailData} setFilteredProducts={setFilteredData} onCategoryChange={handleCategoryChange} />
-                <div className='pt-24 ml-2'>
-                    <BreadcrumbPath selectedCategory={selectedCategory} selectedProduct={selectedProduct} />
-                    {selectedProduct ?
-                        <ProductDetail detailData={detailData} selectedProduct={selectedProduct} onClose={() => setSelectedProduct(null)} />
-                        :
-                        <ProductTable columns={columns} data={filteredData} onRowClick={handleRowClick} />
-                    }
-                </div>
+                {isCamera && <CameraSection data={data} onRowClick={handleRowClick} />}
+                {isProducts && (
+                    <>
+                        <HeaderMenu products={data} detailData={detailData} setFilteredProducts={setFilteredData} onCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
+                        <div className='pt-24 ml-2'>
+                            <BreadcrumbPath selectedCategory={selectedCategory} selectedSubCategory={selectedSubCategory} selectedProduct={selectedProduct} />
+                            {selectedProduct ?
+                                <ProductDetail detailData={detailData} selectedProduct={selectedProduct} onClose={() => setSelectedProduct(null)} />
+                                :
+                                <ProductTable columns={columns} data={filteredData} onRowClick={handleRowClick} />
+                            }
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     )

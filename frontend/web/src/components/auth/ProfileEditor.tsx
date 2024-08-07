@@ -27,7 +27,7 @@ const ProfileEditor: FC = (props: Props) => {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className='bg-transparent text-primary underline hover:bg-secondary'>Edit Profile</Button>
+                <Button className='bg-transparent text-primary underline hover:bg-transparent'>Edit Profile</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

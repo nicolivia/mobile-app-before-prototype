@@ -1,18 +1,20 @@
 import { FC } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Account } from '@/components'
+import { Account, SettingsModal } from '@/components'
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu'
+import { Popover, PopoverTrigger } from '@/components/ui/popover'
 import { CiSettings, CiMedicalClipboard, CiCamera } from "react-icons/ci";
 
-const navLinks = [
-    { icon: CiCamera, path: '', label: 'camera' },
-    { icon: CiMedicalClipboard, path: '/dashboard', label: 'products' },
-    { icon: CiSettings, path: '', label: 'settings' },
-];
-type Props = {}
+const SideBar: FC<SideBarProps> = ({ onToggleCamera, onShowProducts }) => {
+    const handleClick = (label: string) => {
+        if (label === 'camera') {
+            onToggleCamera()
+        } else if (label === 'products') {
+            onShowProducts()
+        }
+    }
 
-const SideBar: FC = (props: Props) => {
     return (
         <aside className='flex flex-col justify-between min-w-52 h-full py-6 px-2 rounded-3xl bg-background shadow-lg overflow-hidden'>
             <div className='w-full'>
@@ -25,18 +27,40 @@ const SideBar: FC = (props: Props) => {
                 <NavigationMenu className='w-full'>
                     <NavigationMenuList className='w-[156px] flex flex-col justify-center items-end gap-y-2'>
                         {navLinks.map((link, index) => (
-                            <NavigationMenuItem key={index} className='flex justify-start w-full'>
-                                <Link href={link.path} passHref legacyBehavior>
-                                    <NavigationMenuTrigger className='flex justify-start items-center w-full gap-x-3'>
-                                        <div className='w-6 h-6 flex justify-center items-center'>
-                                            <link.icon className='w-5 h-auto' />
-                                        </div>
-                                        <span className='text-sm capitalize'>
-                                            {link.label}
-                                        </span>
-                                    </NavigationMenuTrigger>
-                                </Link>
-                            </NavigationMenuItem>
+                            <>
+                                {link.label === 'settings' ? (
+                                    <Popover key={index}>
+                                        <PopoverTrigger
+                                            onClick={() => handleClick(link.label)}
+                                            className='flex justify-start items-center w-full gap-x-3 py-2 px-4 hover:bg-accent hover:text-accent-foreground rounded-md'
+                                        >
+                                            <div className='w-6 h-6 flex justify-center items-center'>
+                                                <link.icon className='w-5 h-auto' />
+                                            </div>
+                                            <span className='text-sm capitalize font-light'>
+                                                {link.label}
+                                            </span>
+                                        </PopoverTrigger>
+                                        <SettingsModal />
+                                    </Popover>
+                                ) : (
+                                    < NavigationMenuItem key={index} className='flex justify-start w-full' >
+                                        <Link href={link.path} passHref legacyBehavior>
+                                            <NavigationMenuTrigger
+                                                onClick={() => handleClick(link.label)}
+                                                className='flex justify-start items-center w-full gap-x-3'
+                                            >
+                                                <div className='w-6 h-6 flex justify-center items-center'>
+                                                    <link.icon className='w-5 h-auto' />
+                                                </div>
+                                                <span className='text-sm capitalize font-light'>
+                                                    {link.label}
+                                                </span>
+                                            </NavigationMenuTrigger>
+                                        </Link>
+                                    </NavigationMenuItem>
+                                )}
+                            </>
                         ))}
                     </NavigationMenuList>
                 </NavigationMenu>
@@ -46,8 +70,19 @@ const SideBar: FC = (props: Props) => {
             <div className="flex flex-col items-center mb-8">
                 <Image src="/images/logo.png" alt="mediscan logo" width={34} height={46} />
             </div>
-        </aside>
+        </aside >
     )
 }
 
 export default SideBar
+
+interface SideBarProps {
+    onToggleCamera: () => void
+    onShowProducts: () => void
+}
+
+const navLinks = [
+    { icon: CiCamera, path: '', label: 'camera' },
+    { icon: CiMedicalClipboard, path: '/dashboard', label: 'products' },
+    { icon: CiSettings, path: '', label: 'settings' },
+];

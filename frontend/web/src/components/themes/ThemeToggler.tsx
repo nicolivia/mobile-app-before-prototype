@@ -1,7 +1,7 @@
 "use client"
 
-import * as React from "react"
-import { PiSunDimLight, PiMoonStarsLight } from "react-icons/pi";
+import { FC, createElement } from "react"
+import { PiSunDimLight, PiMoonStarsLight, PiDesktopLight } from "react-icons/pi";
 import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
@@ -12,16 +12,23 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-const ThemeToggler = () => {
-    const { setTheme } = useTheme()
+const ThemeToggler: FC = () => {
+    const { theme, setTheme } = useTheme()
+    let themeIcon;
+
+    if (theme === 'dark') {
+        themeIcon = PiMoonStarsLight;
+    } else if (theme === 'light') {
+        themeIcon = PiSunDimLight;
+    } else {
+        themeIcon = PiDesktopLight;
+    }
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
-                    <PiSunDimLight className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                    <PiMoonStarsLight className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                    <span className="sr-only">Toggle theme</span>
+                    {createElement(themeIcon, { className: "h-5 w-5 text-primary stroke-[1.5px]" })}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
