@@ -40,7 +40,7 @@ def send_email(email, message):
     response = sg.send(message)
     return response.status_code
 
-# Request OTP functions
+# Request OTP
 def request_temp_password(contact):
     customer = get_customer_by_contact(contact)
 

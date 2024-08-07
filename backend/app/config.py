@@ -17,7 +17,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True
     
-    MYSQL_DATABASE= os.getenv('MYSQL_DATABASE')
+    MYSQL_DATABASE = os.getenv('MYSQL_DATABASE')
     MYSQL_USER = os.getenv('MYSQL_USER')
     MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
     MYSQL_ROOT_PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
@@ -25,8 +25,8 @@ class Config:
     
     # Twilio configuration
     TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
-    TWILIO_SERIVCE_SID = os.getenv('TWILIO_SERVICE_SID')
+    TWILIO_SERVICE_SID = os.getenv('TWILIO_SERVICE_SID')
     TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
-    TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
-    SENDGRID_API_KEY=os.getenv('SENDGRID_API_KEY')
-    MAIL_FROM=os.getenv('MAIL_FROM')
+    TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
+    SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+    MAIL_FROM = os.getenv('MAIL_FROM')
