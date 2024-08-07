@@ -15,8 +15,6 @@ const DashboardPage = () => {
     const [isCamera, setIsCamera] = useState(false)
     const [isProducts, setIsProducts] = useState(true)
 
-
-
     useEffect(() => {
         const fetchData = async () => {
             const productData = await getData()
