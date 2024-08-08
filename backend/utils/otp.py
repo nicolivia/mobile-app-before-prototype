@@ -13,6 +13,19 @@ import ssl
 def create_temp_password():
     return ''.join([str(random.randint(0, 9)) for _ in range(6)])
 
+# Send an OTP via email
+def send_email(email, message):
+    message = Mail(
+        from_email=current_app.config['MAIL_FROM'],
+        to_emails=email,
+        subject='Your OTP Code',
+        html_content=message
+    )
+    ssl._create_default_https_context = ssl._create_unverified_context
+    sg = SendGridAPIClient(current_app.config['SENDGRID_API_KEY'])
+    response = sg.send(message)
+    return response.status_code
+
 # Send an OTP via SMS
 def send_sms(phone, message):
     account_sid = current_app.config['TWILIO_ACCOUNT_SID']
@@ -27,19 +40,6 @@ def send_sms(phone, message):
     )
     return message.sid
 
-# Send an OTP via email
-def send_email(email, message):
-    message = Mail(
-        from_email=current_app.config['MAIL_FROM'],
-        to_emails=email,
-        subject='Your OTP Code',
-        html_content=message
-    )
-    ssl._create_default_https_context = ssl._create_unverified_context
-    sg = SendGridAPIClient(current_app.config['SENDGRID_API_KEY'])
-    response = sg.send(message)
-    return response.status_code
-
 # Request OTP
 def request_temp_password(contact):
     customer = get_customer_by_contact(contact)
@@ -48,6 +48,7 @@ def request_temp_password(contact):
         return handle_error('Customer not found', 404)
 
     temp_password = create_temp_password()
+    print('temp_password: ' , temp_password)
     temp_password_expiry = datetime.now() + timedelta(minutes=5)
 
     customer.temporary_password = temp_password
