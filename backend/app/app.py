@@ -36,6 +36,9 @@ def create_app():
     from app.product_routes import bp as product_bp
     app.register_blueprint(product_bp)
 
+    from app.recognition_routes import bp as recognition_bp
+    app.register_blueprint(recognition_bp)
+
     return app
 
 if __name__ == '__main__':
