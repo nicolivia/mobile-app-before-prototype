@@ -4,13 +4,12 @@ import { shareAsync } from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
 import { Camera } from 'expo-camera/legacy';
 import { StatusBar } from 'expo-status-bar';
-import UploadIcon from '../../assets/images/upload.png';
 
 export default function CameraComponent() {
   let cameraRef = useRef();
-  const [hasCameraPermission, setHasCameraPermission] = useState();
-  const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
-  const [photo, setPhoto] = useState();
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState(null);
+  const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -21,7 +20,7 @@ export default function CameraComponent() {
     })();
   }, []);
 
-  if (hasCameraPermission === undefined) {
+  if (hasCameraPermission === null) {
     return <Text>Requesting permissions...</Text>;
   } else if (!hasCameraPermission) {
     return <Text>Permission for camera not granted. Please change this in settings.</Text>;
@@ -30,7 +29,7 @@ export default function CameraComponent() {
   let takePic = async () => {
     let options = {
       quality: 1,
-      base64: true,
+      base64: false,  // Do not include base64 in the URI
       exif: false,
     };
 
@@ -38,26 +37,32 @@ export default function CameraComponent() {
     setPhoto(newPhoto);
   };
 
-  const uploadImage = () => {
-    console.log('uploading image');
+  const sharePic = () => {
+    shareAsync(photo.uri).then(() => {
+      setPhoto(null);
+    });
+  };
+
+  const savePhoto = async () => {
+    try {
+      const asset = await MediaLibrary.createAssetAsync(photo.uri);
+      const album = await MediaLibrary.getAlbumAsync('MyAppPhotos');
+      if (album == null) {
+        await MediaLibrary.createAlbumAsync('MyAppPhotos', asset, false);
+      } else {
+        await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+      }
+      console.log('Photo saved successfully!');
+      setPhoto(null);
+    } catch (error) {
+      console.log('Error saving photo:', error);
+    }
   };
 
   if (photo) {
-    let sharePic = () => {
-      shareAsync(photo.uri).then(() => {
-        setPhoto(undefined);
-      });
-    };
-
-    let savePhoto = () => {
-      MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
-        setPhoto(undefined);
-      });
-    };
-
     return (
       <SafeAreaView style={styles.container}>
-        <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," + photo.base64 }} />
+        <Image style={styles.preview} source={{ uri: photo.uri }} />
         <View style={styles.optionButtonsContainer}>
           <TouchableOpacity onPress={sharePic} style={styles.optionButton}>
             <Text style={styles.optionButtonText}>Share</Text>
@@ -67,7 +72,7 @@ export default function CameraComponent() {
               <Text style={styles.optionButtonText}>Save</Text>
             </TouchableOpacity>
           ) : null}
-          <TouchableOpacity onPress={() => setPhoto(undefined)} style={styles.optionButton}>
+          <TouchableOpacity onPress={() => setPhoto(null)} style={styles.optionButton}>
             <Text style={styles.optionButtonText}>Discard</Text>
           </TouchableOpacity>
         </View>
@@ -83,10 +88,6 @@ export default function CameraComponent() {
             <Text style={styles.shootButtonText}></Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={uploadImage} style={styles.uploadButtonWrap}>
-          <Image source={UploadIcon} style={styles.icon} />
-          <Text style={styles.uploadText}>Upload</Text>
-        </TouchableOpacity>
       </View>
       <StatusBar style="auto" />
     </Camera>
@@ -128,28 +129,6 @@ const styles = StyleSheet.create({
   shootButtonText: {
     color: '#60969A',
     fontWeight: 'bold',
-  },
-  uploadButtonWrap: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    width: 80,
-    height: 40,
-    flexDirection: 'row',
-    borderRadius: 10,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-  },
-  icon: {
-    width: 15,
-    height: 15,
-    marginRight: 5,
-  },
-  uploadText: {
-    fontSize: 12,
-    color: '#000',
   },
   preview: {
     alignSelf: 'stretch',

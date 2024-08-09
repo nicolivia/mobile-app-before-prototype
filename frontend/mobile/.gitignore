@@ -18,3 +18,8 @@ web-build/
 
 expo-env.d.ts
 # @end expo-cli.DS_Store
+
+# Default ignored files
+/shelf/
+/workspace.xml
+
