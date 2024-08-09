@@ -145,15 +145,15 @@ const styles = StyleSheet.create({
   optionButton: {
     width: 100,
     height: 50,
-    backgroundColor: '#60969A', // Custom background color
+    backgroundColor: '#60969A',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     margin: 10,
   },
   optionButtonText: {
-    color: '#fff', // Text color
-    fontSize: 16, // Font size
+    color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });
