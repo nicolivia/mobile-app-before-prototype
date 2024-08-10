@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image } from 'react-native';
-import { shareAsync } from 'expo-sharing';
+import { StyleSheet, View, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import { Camera } from 'expo-camera/legacy';
 import { StatusBar } from 'expo-status-bar';
@@ -46,19 +45,20 @@ export default function CameraComponent() {
     setPhoto(newPhoto);
   };
 
-  if (hasCameraPermission === null || hasMediaLibraryPermission === null) {
-    return <Text>Requesting permissions...</Text>;
-  }
-
-  if (!hasCameraPermission) {
-    return <Text>Permission for camera not granted. Please change this in settings.</Text>;
-  }
+  const getPhotoUri = () => {
+    if (photo) {
+      return photo.uri;
+    } else if (uploadedImage) {
+      return uploadedImage;
+    }
+    return null;
+  };
 
   return (
     <Camera style={styles.container} ref={cameraRef}>
-      {photo ? (
+      {(photo || uploadedImage) ? (
         <SafeAreaView style={styles.container}>
-          <Image style={styles.preview} source={{ uri: photo.uri }} />
+          <Image style={styles.preview} source={{ uri: getPhotoUri() }} />
           <OptionButton
             photo={photo}
             setPhoto={setPhoto}
