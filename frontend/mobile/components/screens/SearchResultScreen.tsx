@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import { useRouter } from 'expo-router'
-import ProductImage from '../../assets/images/image.png'
+import ProductImage from '../../assets/images/product.png'
 import BoardIcon from '../../assets/images/board.png'
 import PillIcon from '../../assets/images/pill.png'
 
@@ -26,7 +26,7 @@ const SearchResultScreen: FC<Props> = ({ setPhoto }) => {
             {/* Product information section */}
             <View style={styles.productContainer}>
                 <View style={styles.productImageWrap}>
-                    <Image source={ProductImage} />
+                    <Image source={ProductImage} style={styles.productImage} />
                 </View>
                 <View style={styles.infoWrap}>
                     <View style={styles.infoCover}>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         minWidth: '100%',
         minHeight: '100%',
-        backgroundColor: '#FFF',
+        backgroundColor: '#EBF1F6',
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
     },
@@ -87,17 +87,25 @@ const styles = StyleSheet.create({
         marginTop: 25,
         marginBottom: 20,
         borderWidth: 1,
-        borderColor: '#D9D9D9',
+        borderColor: '#EBF1F6',
         borderRadius: 30,
     },
     productImageWrap: {
         minWidth: '100%',
         maxHeight: 240,
+        alignItems: 'center',
+        justifyContent: 'center',
         paddingVertical: 20,
         marginBottom: 10,
         marginHorizontal: 0,
         overflow: 'hidden',
         borderRadius: 20,
+        backgroundColor: '#EBF1F6',
+    },
+    productImage: {
+        width: 100,
+        height: '100%',
+        resizeMode: 'contain',
     },
     infoWrap: {
         width: '100%',
@@ -144,9 +152,9 @@ const styles = StyleSheet.create({
         marginHorizontal: 'auto',
     },
     text: {
-        color: '#002020',
-        fontSize: 14,
-        fontWeight: 'regular',
+        color: '#EBF1F6',
+        fontSize: 16,
+        fontWeight: '500',
     },
     stock: {
         color: '#002020',

@@ -4,6 +4,10 @@ import { shareAsync } from 'expo-sharing'
 import * as MediaLibrary from 'expo-media-library'
 import SearchResultScreen from '../screens/SearchResultScreen'
 import CloseIcon from '../../assets/images/close.png'
+import BinIcon from '../../assets/images/bin.png'
+import ShareIcon from '../../assets/images/share.png'
+import SaveIcon from '../../assets/images/saveW.png'
+import SearchIcon from '../../assets/images/searchW.png'
 
 const { height } = Dimensions.get('window');
 
@@ -98,19 +102,31 @@ const OptionButton: FC<Props> = ({ photo, setPhoto, hasCameraPermission, hasMedi
         <>
             <View style={styles.optionButtonsContainer}>
                 <TouchableOpacity onPress={sharePhoto} style={styles.optionButton}>
+                    <View style={styles.iconWrap}>
+                        <Image source={ShareIcon} style={styles.optionIcon} />
+                    </View>
                     <Text style={styles.optionButtonText}>Share</Text>
                 </TouchableOpacity>
                 {hasMediaLibraryPermission && !isUploadedImage ? (
-                    <TouchableOpacity onPress={savePhoto} style={styles.optionButton}>
-                        <Text style={styles.optionButtonText}>Save</Text>
+                    <TouchableOpacity onPress={savePhoto} style={styles.optionButtonMiddle}>
+                        <View style={styles.iconWrapMiddle}>
+                            <Image source={SaveIcon} style={styles.optionIconMiddle} />
+                        </View>
+                        <Text style={styles.optionButtonTextMiddle}>Save</Text>
                     </TouchableOpacity>
                 ) : null}
                 {photo ? (
-                    <TouchableOpacity onPress={searchPhoto} style={styles.optionButton}>
-                        <Text style={styles.optionButtonText}>Search</Text>
+                    <TouchableOpacity onPress={searchPhoto} style={styles.optionButtonMiddle}>
+                        <View style={styles.iconWrapMiddle}>
+                            <Image source={SearchIcon} style={styles.optionIconMiddle} />
+                        </View>
+                        <Text style={styles.optionButtonTextMiddle}>Search</Text>
                     </TouchableOpacity>
                 ) : null}
                 <TouchableOpacity onPress={() => setPhoto(null)} style={styles.optionButton}>
+                    <View style={styles.iconWrap}>
+                        <Image source={BinIcon} style={styles.optionIcon} />
+                    </View>
                     <Text style={styles.optionButtonText}>Discard</Text>
                 </TouchableOpacity>
             </View>
@@ -170,17 +186,55 @@ const styles = StyleSheet.create({
         marginHorizontal: 'auto',
     },
     optionButton: {
-        width: 100,
-        height: 50,
-        backgroundColor: '#60969A',
-        borderRadius: 10,
+        width: 70,
+        height: 70,
+        backgroundColor: '#EBF1F6',
+        borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: 'auto',
     },
     optionButtonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 'regular',
+        color: '#002020',
+        fontSize: 10,
+        fontWeight: '300',
+        marginTop: 10,
+    },
+    iconWrap: {
+        width: 17,
+        height: 17,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    optionIcon: {
+        width: 17,
+        height: 17,
+        resizeMode: 'contain'
+    },
+    optionButtonMiddle: {
+        width: 90,
+        height: 90,
+        backgroundColor: '#60969A',
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 'auto',
+    },
+    optionButtonTextMiddle: {
+        color: '#EBF1F6',
+        fontSize: 12,
+        fontWeight: '400',
+        marginTop: 10,
+    },
+    iconWrapMiddle: {
+        width: 23,
+        height: 23,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    optionIconMiddle: {
+        width: 23,
+        height: 23,
+        resizeMode: 'contain'
     },
 });
