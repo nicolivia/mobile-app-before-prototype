@@ -1,3 +1,4 @@
+src>components>webcan>camera
 'use client'
 
 import { FC, useEffect, useRef, useState } from 'react'
@@ -5,10 +6,14 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Button } from '../ui/button'
 import { Product } from '@/components/products/ProductColumns'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 interface DataTableProps {
     onRowClick: (row: Product) => void
     data: Product[]
+}
+interface PredictionResult {
+    predictions: string; // 预测结果的类型
 }
 
 const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
@@ -19,6 +24,7 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
     const [clearImage, setClearImage] = useState<boolean>(false)
     const [foundProduct, setFoundProduct] = useState<Product | null>(null)
     const router = useRouter()
+    const [imageBase64, setImageBase64] = useState<string>('');
 
     const getUserCamera = () => {
         setHasFound(false)
@@ -35,24 +41,25 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
     }
 
     const takePhoto = () => {
-        if (!videoRef.current || !photoRef.current) return
-
-        const width = 500
-        const height = width / (16 / 9)
-        const photo = photoRef.current
-        const video = videoRef.current
-        photo.width = width
-        photo.height = height
-
-        const ctx = photo.getContext('2d')
+        if (!videoRef.current || !photoRef.current) return;
+    
+        const width = 500;
+        const height = width / (16 / 9);
+        const photo = photoRef.current;
+        const video = videoRef.current;
+        photo.width = width;
+        photo.height = height;
+    
+        const ctx = photo.getContext('2d');
         if (ctx) {
-            ctx.translate(photo.width, 0)
-            ctx.scale(-1, 1)
-            ctx.drawImage(video, 0, 0, photo.width, photo.height)
+            ctx.translate(photo.width, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, 0, 0, photo.width, photo.height);
         }
-
-        setTookPhoto(true)
-    }
+        const imageData = photo.toDataURL('image/png');
+        setImageBase64(imageData);  //store
+        setTookPhoto(true);
+    };
 
     useEffect(() => {
         getUserCamera()
@@ -67,15 +74,42 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
         }
     }, [videoRef])
 
-    const searchImage = () => {
-        const productID = 100000001 // product ID should be returned from the server
-        setHasFound(true)
-        const product = data.find(item => item.id === productID)
-        if (product) {
-            setFoundProduct(product)
+    const queryClient = useQueryClient();
+    const { mutateAsync: searchImageMutation } = useMutation<PredictionResult, Error, { image: string }>({
+        mutationFn: async ({ image }: { image: string }) => {
+            try {
+                const res = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image }),
+                });
+    
+                const data = await res.json();
+                if (!res.ok || data.error) throw new Error(data.error || 'Failed to send the image');
+    
+                return data as PredictionResult;  // 显式指定返回的数据类型
+            } catch (error) {
+                throw new Error('error');
+            }
+        },
+    });
+
+    const searchImage = async () => {
+    try {
+        const result = await searchImageMutation({ image: imageBase64 });  // 传递图像数据
+        const product = result.predictions;  // 从返回的数据中提取预测结果
+
+        // 进一步处理
+        const matchedProduct = data.find(item => item.productName === product);
+        if (matchedProduct) {
+            setFoundProduct(matchedProduct);
+            setHasFound(true);
         }
-        setTookPhoto(false)
+        setTookPhoto(false);
+    } catch (error) {
+        console.log(error);
     }
+};
 
     const seeProductDetail = () => {
         if (foundProduct) {
