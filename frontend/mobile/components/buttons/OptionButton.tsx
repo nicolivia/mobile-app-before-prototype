@@ -1,13 +1,15 @@
 import { FC, useState, useRef } from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView, Animated, Dimensions, PanResponder } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, Animated, Dimensions, PanResponder } from 'react-native'
 import { shareAsync } from 'expo-sharing'
 import * as MediaLibrary from 'expo-media-library'
 import SearchResultScreen from '../screens/SearchResultScreen'
+import ConfirmModal from '../modals/ConfirmModal'
 import CloseIcon from '../../assets/images/close.png'
 import BinIcon from '../../assets/images/bin.png'
 import ShareIcon from '../../assets/images/share.png'
 import SaveIcon from '../../assets/images/saveW.png'
 import SearchIcon from '../../assets/images/searchW.png'
+import ArrowLeftIcon from '../../assets/images/arrow-left.png'
 
 const { height } = Dimensions.get('window');
 
@@ -20,10 +22,12 @@ type Props = {
 };
 
 const OptionButton: FC<Props> = ({ photo, setPhoto, hasCameraPermission, hasMediaLibraryPermission, isUploadedImage }) => {
-    const [hasFound, setHasFound] = useState(false);
-    const [productName, setProductName] = useState('');
     const slideAnim = useRef(new Animated.Value(height)).current;
+    const [productData, setProductData] = useState<any[]>([]);
     const [isVisible, setIsVisible] = useState(false);
+    const [slideNumber, setSlideNumber] = useState<number>(0);
+    const [modalVisible, setModalVisible] = useState(false);
+    let totalSlides = 4;
 
     const sharePhoto = async () => {
         if (photo) {
@@ -55,10 +59,22 @@ const OptionButton: FC<Props> = ({ photo, setPhoto, hasCameraPermission, hasMedi
 
     const searchPhoto = () => {
         try {
-            // Simulate searching and finding the product
-            console.log('Found!');
-            setHasFound(true);
-            slideUp(); // Move the slideUp call here after setting hasFound to true
+            const product = 'await the product data from server'
+            productData.push({
+                id: 'product.id',
+                name: 'product.productName',
+                image: 'product.image',
+                stock: 'product.stock',
+                price: 'product.price',
+            })
+
+            if (product) {
+                setIsVisible(true)
+                slideUp();
+            } else {
+                alert('Product not found');
+                setIsVisible(false)
+            }
         } catch (error) {
             console.log('Error searching photo:', error);
         }
@@ -80,6 +96,10 @@ const OptionButton: FC<Props> = ({ photo, setPhoto, hasCameraPermission, hasMedi
         })
     ).current;
 
+    const confirmDelete = () => {
+        setModalVisible(true);
+    };
+
     const slideUp = () => {
         setIsVisible(true);
         Animated.timing(slideAnim, {
@@ -96,8 +116,22 @@ const OptionButton: FC<Props> = ({ photo, setPhoto, hasCameraPermission, hasMedi
             useNativeDriver: true,
         }).start(() => {
             setIsVisible(false);
+            setSlideNumber(0);
         });
     };
+
+    const moveToNextSlide = () => {
+        if (slideNumber < totalSlides) {
+            setSlideNumber(slideNumber + 1);
+        }
+    };
+
+    const moveToPreviousSlide = () => {
+        if (slideNumber > 0) {
+            setSlideNumber(slideNumber - 1);
+        }
+    };
+
     return (
         <>
             <View style={styles.optionButtonsContainer}>
@@ -136,11 +170,35 @@ const OptionButton: FC<Props> = ({ photo, setPhoto, hasCameraPermission, hasMedi
                     style={[styles.animatedView, { transform: [{ translateY: slideAnim }] }]}
                     {...panResponder.panHandlers}
                 >
-                    <TouchableOpacity onPress={slideDown} style={styles.closeIconWrap}>
-                        <Image source={CloseIcon} style={styles.closeIcon} />
-                    </TouchableOpacity>
-                    <SearchResultScreen setPhoto={setPhoto} />
+                    <View style={styles.headerIconWrap}>
+                        {(slideNumber > 0) ? (
+                            <TouchableOpacity onPress={moveToPreviousSlide}>
+                                <View style={styles.headerIconCover}>
+                                    <Image source={ArrowLeftIcon} style={styles.arrowIcon} />
+                                </View>
+                            </TouchableOpacity>
+                        ) : (
+                            <View></View>
+                        )}
+                        <TouchableOpacity onPress={confirmDelete}>
+                            <View style={styles.headerIconCover}>
+                                <Image source={CloseIcon} style={styles.closeIcon} />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <SearchResultScreen
+                        productData={productData}
+                        setPhoto={setPhoto}
+                        slideNumber={slideNumber}
+                        moveToNextSlide={moveToNextSlide}
+                        moveToPreviousSlide={moveToPreviousSlide}
+                    />
                 </Animated.View>
+            )}
+
+            {/* Modal for confirmation */}
+            {modalVisible && (
+                <ConfirmModal question='Would you go back to camera?' setPhoto={setPhoto} modalVisible={modalVisible} setModalVisible={setModalVisible} />
             )}
         </>
     );
@@ -157,25 +215,39 @@ const styles = StyleSheet.create({
     animatedView: {
         position: 'absolute',
         width: '100%',
-        height: '90%',
-        backgroundColor: '#FFF',
+        height: '92%',
+        backgroundColor: '#EBF1F6',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         alignItems: 'center',
         justifyContent: 'flex-start',
     },
-    closeIconWrap: {
+    headerIconWrap: {
         width: '100%',
         height: 35,
+        flexDirection: 'row',
         alignItems: 'flex-end',
+        justifyContent: 'space-between',
+        padding: 10,
+        marginTop: 20,
+    },
+    headerIconCover: {
+        width: 35,
+        height: 35,
+        borderRadius: 50,
+        backgroundColor: '#C9D3DB',
+        alignItems: 'center',
         justifyContent: 'center',
     },
     closeIcon: {
         width: 10,
         height: 10,
-        padding: 8,
-        marginTop: 15,
-        marginRight: 18,
+        resizeMode: 'contain'
+    },
+    arrowIcon: {
+        width: 15,
+        height: 13,
+        resizeMode: 'contain'
     },
     optionButtonsContainer: {
         width: '100%',

@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Animated, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import ConfirmModal from '../modals/ConfirmModal'
 
 type Props = {
@@ -7,42 +7,41 @@ type Props = {
     moveToNextSlide: () => void;
 }
 
-const FoundButton: FC<Props> = ({ setPhoto, moveToNextSlide }) => {
+const ConfirmInformationButton: FC<Props> = ({ setPhoto, moveToNextSlide }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
-    const showConfirmModal = () => {
+    const showModal = () => {
         setModalVisible(true)
     }
 
     return (
         <>
-            <Text style={styles.question}>Is this product you are looking for?</Text>
+            <Text style={styles.question}>Would you buy this now?</Text>
             <View style={styles.buttonWrap}>
-                <TouchableOpacity onPress={showConfirmModal} style={styles.button}>
-                    <Text style={styles.text}>No</Text>
+                <TouchableOpacity onPress={showModal} style={styles.button}>
+                    <Text style={styles.text}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={moveToNextSlide} style={styles.button}>
-                    <Text style={styles.text}>Yes</Text>
+                    <Text style={styles.text}>Buy now</Text>
                 </TouchableOpacity>
             </View>
 
             {/* Modal for confirmation */}
             {modalVisible && (
-                <ConfirmModal question='Would you try it again?' setPhoto={setPhoto} modalVisible={modalVisible} setModalVisible={setModalVisible} />
+                <ConfirmModal question='Are you sure?' setPhoto={setPhoto} modalVisible={modalVisible} setModalVisible={setModalVisible} />
             )}
         </>
     )
 }
 
-export default FoundButton
+export default ConfirmInformationButton
 
 const styles = StyleSheet.create({
     question: {
-        width: '100%',
         color: '#002020',
         fontSize: 16,
         textAlign: 'center',
-        marginVertical: 10,
+        marginVertical: 20,
     },
     buttonWrap: {
         width: '100%',
