@@ -1,4 +1,3 @@
-
 'use client'
 
 import { FC, useEffect, useRef, useState } from 'react'
@@ -12,7 +11,7 @@ interface DataTableProps {
     data: Product[]
 }
 interface PredictionResult {
-    predictions: string; // 预测结果的类型
+    predictions: string; // The type of prediction result
 }
 
 const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
@@ -56,7 +55,7 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
             ctx.drawImage(video, 0, 0, photo.width, photo.height);
         }
         const imageData = photo.toDataURL('image/png');
-        setImageBase64(imageData);  //store
+        setImageBase64(imageData);  // Store the image
         setTookPhoto(true);
     };
 
@@ -86,7 +85,7 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
                 const data = await res.json();
                 if (!res.ok || data.error) throw new Error(data.error || 'Failed to send the image');
     
-                return data as PredictionResult;  // 显式指定返回的数据类型
+                return data as PredictionResult;  // Explicitly specify the return data type
             } catch (error) {
                 throw new Error('error');
             }
@@ -95,10 +94,10 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
 
     const searchImage = async () => {
     try {
-        const result = await searchImageMutation({ image: imageBase64 });  // 传递图像数据
-        const product = result.predictions;  // 从返回的数据中提取预测结果
+        const result = await searchImageMutation({ image: imageBase64 });  // Pass the image data
+        const product = result.predictions;  // Extract the prediction result from the returned data
 
-        // 进一步处理
+        // Further processing
         const matchedProduct = data.find(item => item.productName === product);
         if (matchedProduct) {
             setFoundProduct(matchedProduct);
