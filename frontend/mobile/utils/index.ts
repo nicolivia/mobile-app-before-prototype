@@ -1,3 +1,38 @@
+export type Emergency = {
+    id: number;
+    title: string;
+    address: string;
+    phone: string;
+}
+
+export const getEmergencyData = async (): Promise<Emergency[]> => {
+    return [
+        {
+            id: 1,
+            title: 'Takapna FRW Pharmacy',
+            address: '123 Main St, Takapuna ',
+            phone: '0123456789',
+        },
+        {
+            id: 2,
+            title: 'Ambulance',
+            address: 'Auckland, New Zealand',
+            phone: '111',
+        },
+        {
+            id: 3,
+            title: 'Auckland City Hospital',
+            address: '789 Elm Ave, Auckland',
+            phone: '034567890',
+        },
+        {
+            id: 4,
+            title: 'General Practitioner',
+            address: '101 Pine St, Auckland',
+            phone: '0987654321',
+        },
+    ];
+}
 
 export type Product = {
     image: string;
