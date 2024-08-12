@@ -33,6 +33,8 @@ const SearchResultScreen: FC<Props> = ({
     backToCamera
 }) => {
     const slideAnim = useRef(new Animated.Value(0)).current;
+    const [orderQuantity, setOrderQuantity] = useState(1);
+    const [totalProductNumber, setTotalProductNumber] = useState(0);
 
     useEffect(() => {
         Animated.timing(slideAnim, {
@@ -41,6 +43,26 @@ const SearchResultScreen: FC<Props> = ({
             useNativeDriver: true,
         }).start();
     }, [slideNumber]);
+
+    useEffect(() => {
+        const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+        setTotalProductNumber(total);
+    }, [cart]);
+
+    const increaseQuantity = () => {
+        setOrderQuantity(orderQuantity + 1);
+    };
+
+    const decreaseQuantity = () => {
+        if (orderQuantity > 1) {
+            setOrderQuantity(orderQuantity - 1);
+        }
+    };
+
+    const handleAddToCart = () => {
+        addToCart(productData, orderQuantity);
+        moveToNextSlide();
+    };
 
     const addToCart = (product: Product, quantity: number) => {
         setCart((prevCart: CartItem[]) => {
@@ -97,10 +119,31 @@ const SearchResultScreen: FC<Props> = ({
                     {slideNumber === 1 && <BuyOrSaveButton productData={productData} setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} />}
                 </View>
                 <View style={styles.slideContainer}>
-                    {slideNumber === 2 && <SelectQuantityButton productData={productData} addToCart={addToCart} setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} />}
+                    {slideNumber === 2 &&
+                        <SelectQuantityButton
+                            productData={productData}
+                            addToCart={addToCart}
+                            setPhoto={setPhoto}
+                            moveToNextSlide={moveToNextSlide}
+                            increaseQuantity={increaseQuantity}
+                            decreaseQuantity={decreaseQuantity}
+                            orderQuantity={orderQuantity}
+                            handleAddToCart={handleAddToCart}
+                        />
+                    }
                 </View>
                 <View style={styles.slideContainer}>
-                    {slideNumber === 3 && <CheckoutButton cart={cart} setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} backToCamera={backToCamera} />}
+                    {slideNumber === 3 &&
+                        <CheckoutButton
+                            cart={cart}
+                            setPhoto={setPhoto}
+                            moveToNextSlide={moveToNextSlide}
+                            backToCamera={backToCamera}
+                            increaseQuantity={increaseQuantity}
+                            decreaseQuantity={decreaseQuantity}
+                            orderQuantity={orderQuantity}
+                        />
+                    }
                 </View>
                 <View style={styles.slideContainer}>
                     {slideNumber === 4 && <ConfirmCostButton setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} />}

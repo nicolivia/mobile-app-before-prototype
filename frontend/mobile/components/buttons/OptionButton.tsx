@@ -66,8 +66,17 @@ const OptionButton: FC<Props> = ({ photo, setPhoto, hasCameraPermission, hasMedi
                 id: 'product.id',
                 name: 'product.productName',
                 image: 'product.image',
-                stock: 'product.stock',
                 price: 'product.price',
+                stock: 'product.stock',
+
+                // id: number;
+                // image: string;
+                // productName: string;
+                // brandName: string;
+                // genericName: string;
+                // manufacturer: string;
+                // price: number;
+                // stock: number;
             })
 
             if (product) {
