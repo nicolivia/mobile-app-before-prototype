@@ -1,10 +1,12 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { StyleSheet, Text, View, Image, Animated, Dimensions } from 'react-native'
 import FoundButton from '../buttons/FoundButton'
 import BuyOrSaveButton from '../buttons/BuyOrSaveButton'
 import CheckoutButton from '../buttons/CheckoutButton'
+import SelectQuantityButton from '../buttons/SelectQuantityButton'
 import ConfirmCostButton from '../buttons/ConfirmCostButton'
 import ConfirmInformationButton from '../buttons/ConfirmInformationButton'
+import { Product, CartItem } from '@/utils'
 import ProductImage from '../../assets/images/product.png'
 import BoardIcon from '../../assets/images/board.png'
 import PillIcon from '../../assets/images/pill.png'
@@ -16,7 +18,9 @@ type Props = {
     setPhoto: (photo: { uri: string } | null) => void;
     slideNumber: number;
     moveToNextSlide: () => void;
-    moveToPreviousSlide: () => void;
+    cart: CartItem[];
+    setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+    backToCamera: () => void;
 }
 
 const SearchResultScreen: FC<Props> = ({
@@ -24,11 +28,11 @@ const SearchResultScreen: FC<Props> = ({
     setPhoto,
     slideNumber,
     moveToNextSlide,
-    moveToPreviousSlide
+    cart,
+    setCart,
+    backToCamera
 }) => {
     const slideAnim = useRef(new Animated.Value(0)).current;
-    let orderQuantity = 0;
-
 
     useEffect(() => {
         Animated.timing(slideAnim, {
@@ -37,6 +41,19 @@ const SearchResultScreen: FC<Props> = ({
             useNativeDriver: true,
         }).start();
     }, [slideNumber]);
+
+    const addToCart = (product: Product, quantity: number) => {
+        setCart((prevCart: CartItem[]) => {
+            const existingProductIndex = prevCart.findIndex((item: CartItem) => item.product.id === product.id);
+            if (existingProductIndex >= 0) {
+                const updatedCart = [...prevCart];
+                updatedCart[existingProductIndex].quantity += quantity;
+                return updatedCart;
+            } else {
+                return [...prevCart, { product, quantity }];
+            }
+        });
+    };
 
     return (
         <>
@@ -80,13 +97,16 @@ const SearchResultScreen: FC<Props> = ({
                     {slideNumber === 1 && <BuyOrSaveButton productData={productData} setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} />}
                 </View>
                 <View style={styles.slideContainer}>
-                    {slideNumber === 2 && <CheckoutButton orderQuantity={orderQuantity} setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} />}
+                    {slideNumber === 2 && <SelectQuantityButton productData={productData} addToCart={addToCart} setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} />}
                 </View>
                 <View style={styles.slideContainer}>
-                    {slideNumber === 3 && <ConfirmCostButton setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} />}
+                    {slideNumber === 3 && <CheckoutButton cart={cart} setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} backToCamera={backToCamera} />}
                 </View>
                 <View style={styles.slideContainer}>
-                    {slideNumber === 4 && <ConfirmInformationButton setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} />}
+                    {slideNumber === 4 && <ConfirmCostButton setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} />}
+                </View>
+                <View style={styles.slideContainer}>
+                    {slideNumber === 5 && <ConfirmInformationButton setPhoto={setPhoto} moveToNextSlide={moveToNextSlide} />}
                 </View>
             </Animated.View >
         </>
@@ -145,11 +165,10 @@ const styles = StyleSheet.create({
         fontWeight: 'regular',
     },
     iconWrap: {
-        width: 20,
-        height: 30,
+        width: 12,
+        height: 20,
+        resizeMode: 'contain',
         marginRight: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     infoIcon: {
         width: 12,
@@ -188,13 +207,8 @@ const styles = StyleSheet.create({
         height: 350,
         flexDirection: 'row',
         alignItems: 'center',
-        // justifyContent: 'flex-start',
-        // backgroundColor: 'red',
-        // marginTop: 10,
     },
     slideContainer: {
         width: width,
-        // justifyContent: 'center',
-        // alignItems: 'center',
     }
 });

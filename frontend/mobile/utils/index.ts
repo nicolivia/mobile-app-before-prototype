@@ -1,3 +1,4 @@
+
 export type Product = {
     image: string;
     id: number;
@@ -9,6 +10,11 @@ export type Product = {
     stock: number;
     since: string;
     updated: string;
+}
+
+export type CartItem = {
+    product: Product;
+    quantity: number;
 }
 
 export const getData = async (): Promise<Product[]> => {

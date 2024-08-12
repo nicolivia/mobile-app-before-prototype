@@ -16,7 +16,7 @@ const BuyOrSaveButton: FC<Props> = ({ productData, setPhoto, moveToNextSlide }) 
                 console.log('save product')
             }
         } catch (error) {
-
+            console.log(error)
         } finally {
             setPhoto(null)
         }

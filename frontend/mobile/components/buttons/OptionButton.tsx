@@ -4,6 +4,7 @@ import { shareAsync } from 'expo-sharing'
 import * as MediaLibrary from 'expo-media-library'
 import SearchResultScreen from '../screens/SearchResultScreen'
 import ConfirmModal from '../modals/ConfirmModal'
+import { CartItem, Product } from '@/utils'
 import CloseIcon from '../../assets/images/close.png'
 import BinIcon from '../../assets/images/bin.png'
 import ShareIcon from '../../assets/images/share.png'
@@ -27,7 +28,8 @@ const OptionButton: FC<Props> = ({ photo, setPhoto, hasCameraPermission, hasMedi
     const [isVisible, setIsVisible] = useState(false);
     const [slideNumber, setSlideNumber] = useState<number>(0);
     const [modalVisible, setModalVisible] = useState(false);
-    let totalSlides = 4;
+    const [cart, setCart] = useState<CartItem[]>([]);
+    const totalSlides = 5;
 
     const sharePhoto = async () => {
         if (photo) {
@@ -132,6 +134,11 @@ const OptionButton: FC<Props> = ({ photo, setPhoto, hasCameraPermission, hasMedi
         }
     };
 
+    const backToCamera = () => {
+        slideDown();
+        setPhoto(null);
+    };
+
     return (
         <>
             <View style={styles.optionButtonsContainer}>
@@ -157,7 +164,7 @@ const OptionButton: FC<Props> = ({ photo, setPhoto, hasCameraPermission, hasMedi
                         <Text style={styles.optionButtonTextMiddle}>Search</Text>
                     </TouchableOpacity>
                 ) : null}
-                <TouchableOpacity onPress={() => setPhoto(null)} style={styles.optionButton}>
+                <TouchableOpacity onPress={backToCamera} style={styles.optionButton}>
                     <View style={styles.iconWrap}>
                         <Image source={BinIcon} style={styles.optionIcon} />
                     </View>
@@ -191,7 +198,9 @@ const OptionButton: FC<Props> = ({ photo, setPhoto, hasCameraPermission, hasMedi
                         setPhoto={setPhoto}
                         slideNumber={slideNumber}
                         moveToNextSlide={moveToNextSlide}
-                        moveToPreviousSlide={moveToPreviousSlide}
+                        cart={cart}
+                        setCart={setCart}
+                        backToCamera={backToCamera}
                     />
                 </Animated.View>
             )}
