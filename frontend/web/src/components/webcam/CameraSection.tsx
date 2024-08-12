@@ -1,4 +1,3 @@
-src>components>webcan>camera
 'use client'
 
 import { FC, useEffect, useRef, useState } from 'react'
@@ -99,7 +98,7 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
         const result = await searchImageMutation({ image: imageBase64 });  // 传递图像数据
         const product = result.predictions;  // 从返回的数据中提取预测结果
 
-        // 进一步处理
+        // Further processing
         const matchedProduct = data.find(item => item.productName === product);
         if (matchedProduct) {
             setFoundProduct(matchedProduct);

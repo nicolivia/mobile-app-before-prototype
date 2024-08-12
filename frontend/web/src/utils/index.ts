@@ -1,5 +1,3 @@
-index.tsx
-
 import { Product } from '@/components/products/ProductColumns'
 
 export const getData = async (): Promise<Product[]> => {
@@ -935,5 +933,5 @@ export const getDetailData = async (): Promise<DetailProduct[]> => {
             batchNumber: 'Y12345',
             description: 'Doxycycline is used to treat various types of bacterial infections.',
         },
-    ]
+    ]  
 };

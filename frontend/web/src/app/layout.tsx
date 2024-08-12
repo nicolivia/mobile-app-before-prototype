@@ -1,6 +1,3 @@
-frontend>web>src>app>layout.tsx
-
-
 import type { Metadata } from "next";
 import { FC, ReactNode } from 'react'
 import { Manrope } from "next/font/google"
