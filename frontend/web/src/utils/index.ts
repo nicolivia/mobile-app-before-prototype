@@ -1,3 +1,5 @@
+index.tsx
+
 import { Product } from '@/components/products/ProductColumns'
 
 export const getData = async (): Promise<Product[]> => {
@@ -5,7 +7,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000001,
-            productName: 'Aspirin',
+            productName: 'Ascozin',
             brandName: 'Bayer Aspirin',
             genericName: 'Aspirin',
             manufacturer: 'Bayer',
@@ -17,7 +19,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000002,
-            productName: 'Ibuprofen',
+            productName: 'Bioflu',
             brandName: 'Advil',
             genericName: 'Ibuprofen',
             manufacturer: 'Pfizer',
@@ -29,7 +31,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000003,
-            productName: 'Acetaminophen',
+            productName: 'Biogesic',
             brandName: 'Tylenol',
             genericName: 'Acetaminophen',
             manufacturer: 'Johnson & Johnson',
@@ -41,7 +43,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000004,
-            productName: 'Amoxicillin',
+            productName: 'Buscopan',
             brandName: 'Amoxil',
             genericName: 'Amoxicillin',
             manufacturer: 'GlaxoSmithKline',
@@ -53,7 +55,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000005,
-            productName: 'Lisinopril',
+            productName: 'DayZinc',
             brandName: 'Zestril',
             genericName: 'Lisinopril',
             manufacturer: 'AstraZeneca',
@@ -65,7 +67,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000006,
-            productName: 'Metformin',
+            productName: 'Imodium',
             brandName: 'Glucophage',
             genericName: 'Metformin',
             manufacturer: 'Merck',
@@ -77,7 +79,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000007,
-            productName: 'Amlodipine',
+            productName: 'Lactezin',
             brandName: 'Norvasc',
             genericName: 'Amlodipine',
             manufacturer: 'Pfizer',
@@ -89,7 +91,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000008,
-            productName: 'Omeprazole',
+            productName: 'Lagundi',
             brandName: 'Prilosec',
             genericName: 'Omeprazole',
             manufacturer: 'AstraZeneca',
@@ -101,7 +103,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000009,
-            productName: 'Simvastatin',
+            productName: 'Myra_E',
             brandName: 'Zocor',
             genericName: 'Simvastatin',
             manufacturer: 'Merck',
@@ -113,7 +115,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000010,
-            productName: 'Hydrochlorothiazide',
+            productName: 'Neurogen_E',
             brandName: 'Microzide',
             genericName: 'Hydrochlorothiazide',
             manufacturer: 'Novartis',
@@ -125,7 +127,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000011,
-            productName: 'Atorvastatin',
+            productName: 'Tempra',
             brandName: 'Lipitor',
             genericName: 'Atorvastatin',
             manufacturer: 'Pfizer',
@@ -137,7 +139,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000012,
-            productName: 'Losartan',
+            productName: 'Sinecod',
             brandName: 'Cozaar',
             genericName: 'Losartan',
             manufacturer: 'Merck',
@@ -149,7 +151,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000013,
-            productName: 'Gabapentin',
+            productName: 'Flanax',
             brandName: 'Neurontin',
             genericName: 'Gabapentin',
             manufacturer: 'Pfizer',
@@ -233,7 +235,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000020,
-            productName: 'Carvedilol',
+            productName: 'Tuseran',
             brandName: 'Coreg',
             genericName: 'Carvedilol',
             manufacturer: 'GlaxoSmithKline',
@@ -245,7 +247,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000021,
-            productName: 'Meloxicam',
+            productName: 'Decolgen',
             brandName: 'Mobic',
             genericName: 'Meloxicam',
             manufacturer: 'Boehringer Ingelheim',
@@ -257,7 +259,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000022,
-            productName: 'Allopurinol',
+            productName: 'Midol',
             brandName: 'Zyloprim',
             genericName: 'Allopurinol',
             manufacturer: 'Prometheus Laboratories',
@@ -269,7 +271,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000023,
-            productName: 'Cyclobenzaprine',
+            productName: 'Rinityn',
             brandName: 'Flexeril',
             genericName: 'Cyclobenzaprine',
             manufacturer: 'Teva',
@@ -281,7 +283,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000024,
-            productName: 'Azithromycin',
+            productName: 'Rogin_E',
             brandName: 'Zithromax',
             genericName: 'Azithromycin',
             manufacturer: 'Pfizer',
@@ -293,7 +295,7 @@ export const getData = async (): Promise<Product[]> => {
         {
             image: '/images/default-product.png',
             id: 100000025,
-            productName: 'Doxycycline',
+            productName: 'Omeprazole',
             brandName: 'Vibramycin',
             genericName: 'Doxycycline',
             manufacturer: 'Pfizer',
