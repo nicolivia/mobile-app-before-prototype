@@ -5,13 +5,14 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Button } from '../ui/button'
 import { Product } from '@/components/products/ProductColumns'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 interface DataTableProps {
     onRowClick: (row: Product) => void
     data: Product[]
 }
 interface PredictionResult {
-    predictions: string; // The type of prediction result
+    predictions: string; // 预测结果的类型
 }
 
 const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
@@ -55,7 +56,7 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
             ctx.drawImage(video, 0, 0, photo.width, photo.height);
         }
         const imageData = photo.toDataURL('image/png');
-        setImageBase64(imageData);  // Store the image
+        setImageBase64(imageData);  //store
         setTookPhoto(true);
     };
 
@@ -85,7 +86,7 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
                 const data = await res.json();
                 if (!res.ok || data.error) throw new Error(data.error || 'Failed to send the image');
     
-                return data as PredictionResult;  // Explicitly specify the return data type
+                return data as PredictionResult;  // 显式指定返回的数据类型
             } catch (error) {
                 throw new Error('error');
             }
@@ -94,8 +95,8 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
 
     const searchImage = async () => {
     try {
-        const result = await searchImageMutation({ image: imageBase64 });  // Pass the image data
-        const product = result.predictions;  // Extract the prediction result from the returned data
+        const result = await searchImageMutation({ image: imageBase64 });  // 传递图像数据
+        const product = result.predictions;  // 从返回的数据中提取预测结果
 
         // Further processing
         const matchedProduct = data.find(item => item.productName === product);
