@@ -1,3 +1,28 @@
+export type Profile = {
+    fullName: string;
+    ethnicity: string;
+    gender: string;
+    dob: Date;
+    phone: number;
+    email: string;
+    address: string;
+}
+
+export const getProfileData = async (): Promise<Profile[]> => {
+    return [
+        {
+            fullName: 'John Doe',
+            ethnicity: 'Asian',
+            gender: 'Male',
+            dob: new Date('1990-01-01'),
+            phone: 1234567890,
+            email: 'john.doe@example.com',
+            address: '123 Main St, Anytown, CA 12345',
+        },
+    ];
+}
+
+
 export type Emergency = {
     id: number;
     title: string;

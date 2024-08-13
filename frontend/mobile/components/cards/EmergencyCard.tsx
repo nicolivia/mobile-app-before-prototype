@@ -139,7 +139,7 @@ export default EmergencyCard;
 const styles = StyleSheet.create({
     card: {
         width: '100%',
-        height: 250,
+        height: 270,
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 15,
@@ -175,15 +175,22 @@ const styles = StyleSheet.create({
     phoneCover: {
         margin: 10,
         backgroundColor: '#F7F7F7',
-        paddingVertical: 7,
+        paddingVertical: 10,
         paddingHorizontal: 12,
         borderRadius: 8,
         alignItems: 'center',
         justifyContent: 'center',
+        borderWidth: 1 / 3,
+        borderColor: '#CFCFCF',
+        shadowColor: '#757575',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
     },
     phone: {
         width: 150,
-        fontSize: 14,
+        fontSize: 18,
+        fontWeight: '600',
         color: '#60969A',
         textAlign: 'center',
     },
