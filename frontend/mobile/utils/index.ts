@@ -1,3 +1,63 @@
+export type Profile = {
+    fullName: string;
+    ethnicity: string;
+    gender: string;
+    dob: Date;
+    phone: number;
+    email: string;
+    address: string;
+}
+
+export const getProfileData = async (): Promise<Profile[]> => {
+    return [
+        {
+            fullName: 'John Doe',
+            ethnicity: 'Asian',
+            gender: 'Male',
+            dob: new Date('1990-01-01'),
+            phone: 1234567890,
+            email: 'john.doe@example.com',
+            address: '123 Main St, Anytown, CA 12345',
+        },
+    ];
+}
+
+
+export type Emergency = {
+    id: number;
+    title: string;
+    address: string;
+    phone: string;
+}
+
+export const getEmergencyData = async (): Promise<Emergency[]> => {
+    return [
+        {
+            id: 1,
+            title: 'Takapna FRW Pharmacy',
+            address: '123 Main St, Takapuna ',
+            phone: '0123456789',
+        },
+        {
+            id: 2,
+            title: 'Ambulance',
+            address: 'Auckland, New Zealand',
+            phone: '111',
+        },
+        {
+            id: 3,
+            title: 'Auckland City Hospital',
+            address: '789 Elm Ave, Auckland',
+            phone: '034567890',
+        },
+        {
+            id: 4,
+            title: 'General Practitioner',
+            address: '101 Pine St, Auckland',
+            phone: '0987654321',
+        },
+    ];
+}
 
 export type Product = {
     image: string;

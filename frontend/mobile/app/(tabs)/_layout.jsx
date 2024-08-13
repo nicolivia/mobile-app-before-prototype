@@ -16,10 +16,10 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="emergency"
         options={{
           tabBarLabel: 'Emergency',
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="phone" color={color} />,
         }}
       />
       <Tabs.Screen

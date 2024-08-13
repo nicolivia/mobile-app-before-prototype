@@ -9,15 +9,36 @@ type Props = {
     addToCart: (product: any, quantity: number) => void;
     setPhoto: (photo: { uri: string } | null) => void;
     moveToNextSlide: () => void;
+    increaseQuantity: () => void;
+    decreaseQuantity: () => void;
+    orderQuantity: number;
+    handleAddToCart: () => void;
 }
 
-const SelectQuantityButton: FC<Props> = ({ productData, addToCart, setPhoto, moveToNextSlide }) => {
+const SelectQuantityButton: FC<Props> = ({
+    productData,
+    addToCart,
+    setPhoto,
+    increaseQuantity,
+    decreaseQuantity,
+    orderQuantity,
+    handleAddToCart
+}) => {
     const [modalVisible, setModalVisible] = useState(false);
-    const [orderQuantity, setOrderQuantity] = useState(1);
     const animatedValue = useRef(new Animated.Value(0)).current;
 
     const showModal = () => {
         setModalVisible(true)
+    }
+
+    const moveUp = () => {
+        animateQuantityChange('up')
+        increaseQuantity()
+    }
+
+    const moveDown = () => {
+        animateQuantityChange('down')
+        decreaseQuantity()
     }
 
     const animateQuantityChange = (direction: 'up' | 'down') => {
@@ -30,23 +51,6 @@ const SelectQuantityButton: FC<Props> = ({ productData, addToCart, setPhoto, mov
         }).start();
     };
 
-    const decreaseQuantity = () => {
-        if (orderQuantity > 1) {
-            animateQuantityChange('down');
-            setOrderQuantity(orderQuantity - 1);
-        }
-    };
-
-    const increaseQuantity = () => {
-        animateQuantityChange('up');
-        setOrderQuantity(orderQuantity + 1);
-    };
-
-    const handleAddToCart = () => {
-        addToCart(productData, orderQuantity);
-        moveToNextSlide();
-    };
-
     const translateY = animatedValue.interpolate({
         inputRange: [-1, 0, 1],
         outputRange: [20, 0, -20],
@@ -55,7 +59,7 @@ const SelectQuantityButton: FC<Props> = ({ productData, addToCart, setPhoto, mov
     return (
         <>
             <View style={styles.quantityContainer}>
-                <TouchableOpacity onPress={decreaseQuantity}>
+                <TouchableOpacity onPress={moveDown}>
                     <View style={styles.iconCover}>
                         <View style={styles.iconWrap}>
                             <Image source={MinusIcon} style={styles.mathSymbol} />
@@ -67,7 +71,7 @@ const SelectQuantityButton: FC<Props> = ({ productData, addToCart, setPhoto, mov
                         {orderQuantity}
                     </Animated.Text>
                 </View>
-                <TouchableOpacity onPress={increaseQuantity}>
+                <TouchableOpacity onPress={moveUp}>
                     <View style={styles.iconCover}>
                         <View style={styles.iconWrap}>
                             <Image source={PlusIcon} style={styles.mathSymbol} />
