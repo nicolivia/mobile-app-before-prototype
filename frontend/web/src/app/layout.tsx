@@ -1,48 +1,27 @@
 import type { Metadata } from "next";
-import { FC, ReactNode } from 'react'
-import { Manrope } from "next/font/google"
-import '@/app/globals.css'
-import { ThemeProvider } from '@/components'
-import { Toaster } from '@/components/ui/toaster'
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Head from 'next/head'
+import { Manrope } from "next/font/google";
+import '@/app/globals.css';
+import ClientLayout from './template';
 
 const manrope = Manrope({ subsets: ["latin"] });
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-    }
-  }
-})
 
 export const metadata: Metadata = {
   title: "Mediscan",
   description: "Mediscan is a mobile/web application that aims to solve the problem of inefficient product searches and stock checks. The expected outcome is an AI-driven application that uses image recognition for quick, accurate product identification, offering relevant information via images.",
 };
 
-const RootLayout: FC<RootLayoutProps> = ({ children }) => {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <Head>
+        <link rel="icon" href='../../public/images/favicon.png' />
+      </Head>
       <body className={manrope.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <QueryClientProvider client={queryClient}>
-            {children}
-          </QueryClientProvider>
-          <Toaster />
-        </ThemeProvider>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );
-}
-
-export default RootLayout;
-
-interface RootLayoutProps {
-  children: ReactNode;
 }

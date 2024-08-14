@@ -1,18 +1,41 @@
-import { FC } from 'react'
+import { FC, MouseEvent } from 'react'
+import { useRouter } from 'next/navigation';
 import { PopoverContent } from '@/components/ui/popover'
 import { useToast } from '../ui/use-toast'
 import { DeleteAccountModal } from '@/components'
 import { CiLogout } from "react-icons/ci"
+import { useMutation } from '@tanstack/react-query'
 
 const AccountModal: FC = () => {
     const { toast } = useToast()
+    const router = useRouter();
 
-    const handleLogout = () => {
-        console.log('logout')
-        toast({
-            title: 'Logged out',
-            description: 'You have been logged out successfully',
-        })
+    const { mutate: logoutMutation, isError, isPending, error } = useMutation({
+        mutationFn: async () => {
+            try {
+                const res = await fetch('/api/users/logout', {
+                    method: 'POST',
+                })
+
+                const data = await res.json();
+                if (!res.ok || data.error) throw new Error(data.error || 'Failed to logout');
+
+            } catch (error) {
+                throw new Error('An unknown error occurred');
+            }
+        },
+        onSuccess: () => {
+            toast({
+                title: 'Logged out',
+                description: 'logged out successfully',
+            })
+            router.push('/login');
+        },
+    })
+
+    const handleLogout = (e: MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        logoutMutation()
     }
 
     return (

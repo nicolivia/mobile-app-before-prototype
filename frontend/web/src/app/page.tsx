@@ -1,31 +1,54 @@
-import Image from "next/image";
-import { Button } from '@/components/ui/button'
+'use client';
 
-export default function Home() {
-  return (
-    <main className="flex w-full min-h-screen items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+import { FC, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
+import Image from "next/image";
+import { LanguageOption } from '@/components';
+
+const LoadingHeartBeat = dynamic(() => import('@/components/loading/LoadingHeartBeat'), {
+  ssr: false,
+});
+
+const Home: FC = () => {
+  const [isReady, setIsReady] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      setIsReady(true);
+    };
+
+    initializeApp();
+  }, []);
+
+  useEffect(() => {
+    if (isReady) {
+      router.push('/login');
+    }
+  }, [isReady, router]);
+
+  if (!isReady) {
+    return (
+      <div className='bg-custom-gradient w-full min-h-screen flex items-center justify-center relative'>
+        {/* Logo */}
+        <div className="flex flex-col items-center">
+          <Image src="/images/logo.png" alt="mediscan logo" width={74} height={86} />
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70px' }}>
+            <LoadingHeartBeat />
+          </div>
         </div>
 
-        <Button>hello</Button>
+        {/* Flag in the top-right corner */}
+        <div className='absolute top-2 right-8 py-2 px-4 rounded-lg hover:bg-gray-200 transition-all duration-300 cursor-pointer'>
+          <LanguageOption />
+        </div>
       </div>
-    </main>
-  );
+    );
+  }
+
+  return null;
 }
+
+export default Home;

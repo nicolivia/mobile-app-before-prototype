@@ -1,5 +1,5 @@
 from flask import current_app
-from twilio.rest import Client
+# from twilio.rest import Client
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app.app import db
@@ -28,17 +28,18 @@ def send_email(email, message):
 
 # Send an OTP via SMS
 def send_sms(phone, message):
-    account_sid = current_app.config['TWILIO_ACCOUNT_SID']
-    auth_token = current_app.config['TWILIO_AUTH_TOKEN']
-    twilio_phone_number = current_app.config['TWILIO_PHONE_NUMBER']    
-    client = Client(account_sid, auth_token)
+    # account_sid = current_app.config['TWILIO_ACCOUNT_SID']
+    # auth_token = current_app.config['TWILIO_AUTH_TOKEN']
+    # twilio_phone_number = current_app.config['TWILIO_PHONE_NUMBER']    
+    # client = Client(account_sid, auth_token)
 
-    message = client.messages.create(
-        body=message,
-        from_=twilio_phone_number,
-        to=phone
-    )
-    return message.sid
+    # message = client.messages.create(
+    #     body=message,
+    #     from_=twilio_phone_number,
+    #     to=phone
+    # )
+    # return message.sid
+    return "cannot use SMS service"
 
 # Request OTP
 def request_temp_password(contact):

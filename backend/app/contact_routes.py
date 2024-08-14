@@ -6,7 +6,7 @@ from utils.status import handle_error, handle_success
 
 bp = Blueprint('contact', __name__)
 
-@bp.route('/api/contacts/save', methods=['POST'])
+@bp.route('/api/contacts/save/<int:id>', methods=['POST'])
 def save_contact():
     data = request.get_json()
     contact_id = data.get('id')

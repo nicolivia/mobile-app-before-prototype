@@ -18,6 +18,16 @@ const ProductDetail: FC<ProductDetailProps> = ({ detailData, selectedProduct, on
     const detail = detailData.find(detail => detail.id === selectedProduct.id);
     const currentMonth = new Date().toLocaleString('default', { month: 'short' });
 
+    const getStockClassNames = (stock: number) => {
+        if (stock >= 25) {
+            return 'text-green-700 bg-green-200';
+        } else if (stock > 10) {
+            return 'text-yellow-700 bg-yellow-200';
+        } else {
+            return 'text-red-700 bg-red-200';
+        }
+    };
+
     return (
         <motion.div
             initial={{ x: 2000, opacity: 0 }}
@@ -34,35 +44,35 @@ const ProductDetail: FC<ProductDetailProps> = ({ detailData, selectedProduct, on
                 Close
             </Button>
 
-            <div className='w-full bg-white/20 rounded-3xl mt-5 flex flex-col'>
+            <div className='w-full bg-white/20 rounded-3xl mt-3 flex flex-col'>
                 <div className='w-full flex justify-start items-start gap-x-3'>
                     {/* Image */}
-                    <div className='w-1/5 h-48 bg-white p-2 rounded-3xl flex justify-center items-center'>
+                    <div className='w-1/5 h-40 bg-white p-2 rounded-3xl flex justify-center items-center'>
                         <Image src={selectedProduct.image} alt={selectedProduct.productName} width={110} height={110} className='rounded-2xl' />
                     </div>
                     {/* Detail section 1 */}
-                    <div className='w-4/5 h-48 bg-white p-6 rounded-3xl flex flex-col justify-center items-start '>
+                    <div className='w-4/5 max-h-40 bg-white p-6 rounded-3xl flex flex-col justify-center items-start '>
                         <span className='w-full text-md font-bold text-impact mb-1'>General Information</span>
                         <div className='w-full flex justify-between'>
                             <div className='w-1/2 flex flex-col gap-y-2'>
-                                <p className='text-sm'><strong>Product Name:</strong> {selectedProduct.productName}</p>
-                                <p className='text-sm'><strong>Brand Name:</strong> {selectedProduct.brandName}</p>
-                                <p className='text-sm'><strong>Generic Name:</strong> {selectedProduct.genericName}</p>
-                                <p className='text-sm'><strong>Manufacturer:</strong> {selectedProduct.manufacturer}</p>
+                                <p className='text-xs'><strong>Product Name:</strong> {selectedProduct.productName}</p>
+                                <p className='text-xs'><strong>Brand Name:</strong> {selectedProduct.brandName}</p>
+                                <p className='text-xs'><strong>Generic Name:</strong> {selectedProduct.genericName}</p>
+                                <p className='text-xs'><strong>Manufacturer:</strong> {selectedProduct.manufacturer}</p>
                             </div>
                             <div className='w-1/2 flex flex-col gap-y-2'>
                                 {detail && (
-                                    <p className='text-sm'><strong>Systemic Category:</strong> {detail.systemicCategory}</p>
+                                    <p className='text-xs'><strong>Systemic Category:</strong> {detail.systemicCategory}</p>
                                 )}
-                                <p className='text-sm'><strong>Price:</strong> ${selectedProduct.price.toFixed(2)}</p>
-                                <p className='text-sm'><strong>Since:</strong> {selectedProduct.since}</p>
-                                <p className='text-sm'><strong>Updated:</strong> {selectedProduct.updated}</p>
+                                <p className='text-xs'><strong>Price:</strong> ${selectedProduct.price.toFixed(2)}</p>
+                                <p className='text-xs'><strong>Since:</strong> {selectedProduct.since}</p>
+                                <p className='text-xs'><strong>Updated:</strong> {selectedProduct.updated}</p>
                             </div>
                             <div className='w-1/2 flex flex-col gap-y-2'>
                                 {detail && (
                                     <>
-                                        <p className='text-sm'><strong>Therapeutic Class:</strong> {detail.therapeuticClass}</p>
-                                        <p className='text-sm'><strong>Drug Class:</strong> {detail.drugClass}</p>
+                                        <p className='text-xs'><strong>Therapeutic Class:</strong> {detail.therapeuticClass}</p>
+                                        <p className='text-xs'><strong>Drug Class:</strong> {detail.drugClass}</p>
                                     </>
                                 )}
                             </div>
@@ -76,38 +86,38 @@ const ProductDetail: FC<ProductDetailProps> = ({ detailData, selectedProduct, on
                             <div className='w-full flex flex-col mt-3'>
                                 {/* Detail section 2 */}
                                 <div className='flex justify-center items-center gap-x-3'>
-                                    <div className='w-1/2 h-h-48 bg-white p-6 rounded-3xl flex flex-col justify-center items-start gap-y-2'>
+                                    <div className='w-1/2 max-h-40 bg-white p-6 rounded-3xl flex flex-col justify-center items-start gap-y-2'>
                                         <h2 className='w-full text-md font-bold text-impact mb-1'>Composition and Formulation</h2>
-                                        <p className='text-sm'><strong>Active Ingredients:</strong> {detail.activeIngredients}</p>
-                                        <p className='text-sm'><strong>Inactive Ingredients:</strong> {detail.inactiveIngredients}</p>
-                                        <p className='text-sm'><strong>Formulation:</strong> {detail.formulation}</p>
-                                        <p className='text-sm'><strong>Strength:</strong> {detail.strength}</p>
+                                        <p className='text-xs'><strong>Active Ingredients:</strong> {detail.activeIngredients}</p>
+                                        <p className='text-xs'><strong>Inactive Ingredients:</strong> {detail.inactiveIngredients}</p>
+                                        <p className='text-xs'><strong>Formulation:</strong> {detail.formulation}</p>
+                                        <p className='text-xs'><strong>Strength:</strong> {detail.strength}</p>
                                     </div>
                                     {/* Detail section 3 */}
-                                    <div className='w-1/2 h-h-48 bg-white p-6 rounded-3xl flex flex-col justify-center items-start gap-y-2'>
+                                    <div className='w-1/2 max-h-40 bg-white p-6 rounded-3xl flex flex-col justify-center items-start gap-y-2'>
                                         <h2 className='w-full text-md font-bold text-impact mb-1'>Usage and Administration</h2>
-                                        <p className='text-sm'><strong>Dosage:</strong> {detail.dosage}</p>
-                                        <p className='text-sm'><strong>Route of Administration:</strong> {detail.routeOfAdministration}</p>
-                                        <p className='text-sm'><strong>Indications:</strong> {detail.indications}</p>
-                                        <p className='text-sm'><strong>Contraindications:</strong> {detail.contraindications}</p>
+                                        <p className='text-xs'><strong>Dosage:</strong> {detail.dosage}</p>
+                                        <p className='text-xs'><strong>Route of Administration:</strong> {detail.routeOfAdministration}</p>
+                                        <p className='text-xs'><strong>Indications:</strong> {detail.indications}</p>
+                                        <p className='text-xs'><strong>Contraindications:</strong> {detail.contraindications}</p>
                                     </div>
                                 </div>
                                 <div className='w=4/5 flex justify-center items-center gap-x-3 mt-3'>
                                     {/* Detail section 4 */}
-                                    <div className='w-1/2 h-48 bg-white p-6 rounded-3xl flex flex-col justify-center items-start gap-y-2'>
+                                    <div className='w-1/2 max-h-40 bg-white p-6 rounded-3xl flex flex-col justify-center items-start gap-y-2'>
                                         <h2 className='w-full text-md font-bold text-impact mb-1'>Safety and Storage</h2>
-                                        <p className='text-sm'><strong>Side Effects:</strong> {detail.sideEffects}</p>
-                                        <p className='text-sm'><strong>Interactions:</strong> {detail.interactions}</p>
-                                        <p className='text-sm'><strong>Warnings:</strong> {detail.warnings}</p>
-                                        <p className='text-sm'><strong>Storage Conditions:</strong> {detail.storageConditions}</p>
+                                        <p className='text-xs'><strong>Side Effects:</strong> {detail.sideEffects}</p>
+                                        <p className='text-xs'><strong>Interactions:</strong> {detail.interactions}</p>
+                                        <p className='text-xs'><strong>Warnings:</strong> {detail.warnings}</p>
+                                        <p className='text-xs'><strong>Storage Conditions:</strong> {detail.storageConditions}</p>
                                     </div>
                                     {/* Detail section 5 */}
-                                    <div className='w-1/2 h-48 bg-white p-6 rounded-3xl flex flex-col justify-center items-start gap-y-2'>
+                                    <div className='w-1/2 max-h-40 bg-white p-6 rounded-3xl flex flex-col justify-center items-start gap-y-2'>
                                         <h2 className='w-full text-md font-bold text-impact mb-1'>Regulatory Information</h2>
-                                        <p className='text-sm'><strong>Usage Duration:</strong> {detail.usageDuration}</p>
-                                        <p className='text-sm'><strong>Approval Date:</strong> {detail.approvalDate}</p>
-                                        <p className='text-sm'><strong>Expiry Date:</strong> {detail.expiryDate}</p>
-                                        <p className='text-sm'><strong>Batch Number:</strong> {detail.batchNumber}</p>
+                                        <p className='text-xs'><strong>Usage Duration:</strong> {detail.usageDuration}</p>
+                                        <p className='text-xs'><strong>Approval Date:</strong> {detail.approvalDate}</p>
+                                        <p className='text-xs'><strong>Expiry Date:</strong> {detail.expiryDate}</p>
+                                        <p className='text-xs'><strong>Batch Number:</strong> {detail.batchNumber}</p>
                                     </div>
                                 </div>
                             </div>
@@ -117,8 +127,8 @@ const ProductDetail: FC<ProductDetailProps> = ({ detailData, selectedProduct, on
                         <h2 className='w-full text-md font-bold text-impact mb-2'>Description</h2>
                         {detail && (
                             <>
-                                <p className='text-sm'><strong>Target Population:</strong> {detail.targetPopulation}</p>
-                                <p className='text-sm mt-3'>{detail.description}</p>
+                                <p className='text-xs'><strong>Target Population:</strong> {detail.targetPopulation}</p>
+                                <p className='text-xs mt-3'>{detail.description}</p>
                             </>
                         )}
                     </div>
@@ -128,12 +138,16 @@ const ProductDetail: FC<ProductDetailProps> = ({ detailData, selectedProduct, on
                 <ChartContainer config={chartConfig} className="w-full max-h-[250px] bg-white p-3 mt-3 rounded-3xl">
                     <div className='w-full flex justify-between px-3'>
                         <h2 className='w-full text-lg font-bold text-impact mb-2'>Stock Levels Over Time</h2>
-                        <div className='flex justify-end w-40 text-md text-primary mb-4 text-right bg-secondary rounded-lg p-2'>
+                        <div
+                            className={`flex justify-end w-36 text-md mb-4 text-right rounded-lg p-2 ${getStockClassNames(stockData.find(entry => entry.date === currentMonth)?.stock || 0)}`}
+                        >
                             <h2 className='mr-3'>Current Stock:</h2>
                             {stockData.map((entry, index) => (
-                                <strong key={`cell-${index}`}>
-                                    {entry.date === currentMonth && (entry.stock)}
-                                </strong>
+                                entry.date === currentMonth && (
+                                    <strong key={`cell-${index}`}>
+                                        {entry.stock}
+                                    </strong>
+                                )
                             ))}
                         </div>
                     </div>

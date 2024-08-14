@@ -16,6 +16,8 @@ def create_app():
     # Initialise extensions
     db.init_app(app)
     bcrypt = Bcrypt(app)
+    
+    # Configure CORS
     CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
 
     app.config['SESSION_SQLALCHEMY'] = db

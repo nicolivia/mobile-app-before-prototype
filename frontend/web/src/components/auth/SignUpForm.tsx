@@ -1,61 +1,115 @@
 "use client";
 
-import { useState, FormEvent } from 'react';
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { ToastAction } from '@/components/ui/toast'
-import { useToast } from '@/components/ui/use-toast'
+import { FC, useEffect, useState } from 'react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { LoadingSpinner } from '@/components';
+import { PiEyeLight, PiEyeSlashLight } from "react-icons/pi";
 
 const FormSchema = z.object({
-    employeeNumber: z.string().min(2, {
-        message: "Employee number must be at least 2 characters",
+    employee_id: z.string().min(5, {
+        message: "Employee ID must be at least 5 characters",
     }),
-    fullName: z.string().min(1, {
+    full_name: z.string().min(1, {
         message: "Full name is required",
     }),
     password: z.string().min(6, {
         message: "Password must be at least 6 characters",
     }),
-})
+});
 
-export default function SignUpForm() {
-    const [error, setError] = useState<string>('');
+const SignUpForm: FC = () => {
+    const [canSubmit, setCanSubmit] = useState<boolean>(false);
+    const [visible, setVisible] = useState<boolean>(false);
+    const router = useRouter();
+    const toast = useToast();
+    const queryClient = useQueryClient();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            employeeNumber: "",
-            fullName: "",
+            employee_id: "",
+            full_name: "",
             password: "",
         },
     });
 
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-        if (!form.watch("employeeNumber") || !form.watch("fullName") || !form.watch("password")) {
-            setError('Please fill in all fields');
-            return;
-        }
-        setError('');
-        alert('Success!');
+    const { mutate: signUpMutation, isError, isLoading, error } = useMutation({
+        mutationFn: async (formData: z.infer<typeof FormSchema>) => {
+            try {
+                const res = await fetch('/api/employees/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    if (res.headers.get('content-type')?.includes('application/json')) {
+                        const errorData = JSON.parse(errorText);
+                        throw new Error(errorData.error || 'Failed to create an account');
+                    } else {
+                        throw new Error(errorText || 'Failed to create an account');
+                    }
+                }
+
+                const data = await res.json();
+                return data;
+            } catch (error) {
+                throw new Error('An unknown error occurred');
+            }
+        },
+        onSuccess: () => {
+            toast.toast({
+                title: 'Success',
+                description: 'Account created successfully',
+            });
+            queryClient.invalidateQueries({ queryKey: ['authUser'] });
+            router.push('/dashboard');
+        },
+        onError: (error: any) => {
+            toast.toast({
+                title: 'Error',
+                description: error.message,
+            });
+        },
+    });
+
+    const handleSubmit = (formData: z.infer<typeof FormSchema>) => {
+        signUpMutation(formData);
     };
+
+    const handlePassword = () => {
+        setVisible(!visible);
+    };
+
+    useEffect(() => {
+        const subscription = form.watch((value) => {
+            const { employee_id, full_name, password } = value;
+            setCanSubmit(!!employee_id && !!full_name && !!password);
+        });
+        return () => subscription.unsubscribe();
+    }, [form]);
 
     return (
         <div className="flex flex-col items-center w-[274px] max-w-sm gap-y-4">
-            <span className='text-2xl font-bold mt-4'>Login</span>
+            <span className='text-2xl font-bold mt-4'>Sign Up</span>
             <Form {...form}>
-                <form className="w-full flex flex-col gap-y-4" onSubmit={handleSubmit}>
+                <form className="w-full flex flex-col gap-y-4" onSubmit={form.handleSubmit(handleSubmit)}>
                     <FormField
                         control={form.control}
-                        name="employeeNumber"
+                        name="employee_id"
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input placeholder="Employee Number" type='text' className='input' {...field} />
+                                    <Input placeholder="Employee ID" type='text' className='input' {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -63,7 +117,7 @@ export default function SignUpForm() {
                     />
                     <FormField
                         control={form.control}
-                        name="fullName"
+                        name="full_name"
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
@@ -78,17 +132,36 @@ export default function SignUpForm() {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormControl>
-                                    <Input placeholder="Password" type='password' className='input' {...field} />
-                                </FormControl>
+                                <div className="relative">
+                                    <FormControl>
+                                        <Input placeholder="Password" type={visible ? 'text' : 'password'} className='input' {...field} />
+                                    </FormControl>
+                                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer">
+                                        {visible ? <PiEyeLight onClick={handlePassword} /> : <PiEyeSlashLight onClick={handlePassword} />}
+                                    </div>
+                                </div>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <Button variant='default' className='text-primary h-12 rounded-lg bg-muted hover:bg-muted cursor-not-allowed'>Sign Up</Button>
+                    <Button
+                        variant='default'
+                        type="submit"
+                        className={`text-primary h-12 rounded-lg ${canSubmit ? 'bg-impact hover:bg-impact/80 cursor-pointer' : 'bg-muted hover:bg-muted cursor-not-allowed'}`}
+                        disabled={!canSubmit || isLoading}
+                    >
+                        {isLoading ? (
+                            <LoadingSpinner color='background' />
+                        ) : (
+                            'Sign Up'
+                        )}
+                    </Button>
+                    {isError && <p className='text-red-500'>{(error as Error).message}</p>}
                 </form>
             </Form>
-            <span className='w-full text-left text-sm mt-2 text-[#002020]'>Already have an account?</span>
+            <span className='w-full text-left text-sm mt-2 text-[#002020]'>Already a member? <a href="/login" className='underline text-impact hover:impact/80'>Log in</a></span>
         </div>
     );
 }
+
+export default SignUpForm;

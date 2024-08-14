@@ -112,14 +112,14 @@ def create_employee():
     pepper = PEPPER
 
     if not employee_id:
-        return handle_error('Employee ID is required', 400)
+        return jsonify({'error': 'Employee ID is required'}), 400
     if not full_name:
-        return handle_error('Full name is required', 400)
+        return jsonify({'error': 'Full name is required'}), 400
     if not password:
-        return handle_error('Password is required', 400)
+        return jsonify({'error': 'Password is required'}), 400
     
     if get_employee_by_id(employee_id):
-        return handle_error('Employee already exists', 409)
+        return jsonify({'error': 'Employee already exists'}), 409
     
     password_with_pepper = (password + pepper).encode('utf-8')
     hashed_password = bcrypt.generate_password_hash(password_with_pepper).decode('utf-8')

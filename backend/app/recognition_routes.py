@@ -8,9 +8,9 @@ from PIL import Image
 import base64
 
 resnet_model = load_model('recognition_model/package_model.h5')  # Update path if needed
-bp = Blueprint('product', __name__)
+bp = Blueprint('recognition', __name__)
 
-@bp.route('/predict', methods=['POST'])
+@bp.route('/api/predict', methods=['POST'])
 def predict():
     data = request.json
     if 'image' not in data:
@@ -29,13 +29,18 @@ def predict():
         x = x / 255.0  # Normalize if the model was trained with normalization
 
         y_pred = resnet_model.predict(x)
+        
+        print(f'y_pred: {y_pred}')
+        
         class_names = ['Ascozin', 'Bioflu', 'Biogesic', 'Bonamine', 'Buscopan', 'DayZinc', 'Decolgen', 'Flanax',
-                       'Imodium', 'Lactezin', 'Lagundi', 'Midol', 'Myra_E', 'Neurogen_E', 'Omeprazole', 'Rinityn',
+                       'Ascozin', 'Lactezin', 'Lagundi', 'Midol', 'Myra_E', 'Neurogen_E', 'Omeprazole', 'Rinityn',
                        'Rogin_E', 'Sinecod', 'Tempra', 'Tuseran']
 
         class_idx = np.argmax(y_pred, axis=1)[0]
         confidence_score = y_pred[0][class_idx]
         class_name = class_names[class_idx]
+        
+        print(f'Predicted class: {class_name}, Confidence: {confidence_score}')
 
         return jsonify({'predictions': class_name})
     except Exception as e:

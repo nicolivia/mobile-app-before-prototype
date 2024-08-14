@@ -10,20 +10,20 @@ const Account: FC = (props: Props) => {
         <Popover>
             <PopoverTrigger className='w-full flex flex-col justify-start p-0 border-background'>
                 <div className='w-full flex gap-x-3 border-background p-2 hover:bg-accent hover:text-accent-foreground rounded-md cursor-pointer'>
-                    <Avatar>
+                    <Avatar className='w-11 h-11 bg-cover'>
                         <AvatarImage src="/images/default-avatar.png" alt="Avatar" />
                         <AvatarFallback>MS</AvatarFallback>
                     </Avatar>
-                    <div className='flex flex-col'>
-                        <span className='text-sm font-semibold'>Simon Powel</span>
-                        <span>0123456789</span>
+                    <div className='flex flex-col justify-center items-start'>
+                        <span className='text-base font-semibold'>Simon Powel</span>
+                        <span className='text-sm font-normal'>0123456789</span>
                     </div>
-                </div>
-                <div className='w-full text-right'>
-                    <ProfileEditor />
                 </div>
             </PopoverTrigger>
             <AccountModal />
+            <div className='w-full text-right'>
+                <ProfileEditor />
+            </div>
         </Popover>
     )
 }

@@ -6,13 +6,15 @@ import { useRouter } from 'next/navigation'
 import { Button } from '../ui/button'
 import { Product } from '@/components/products/ProductColumns'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { LoadingSpinner } from '@/components'
 
 interface DataTableProps {
     onRowClick: (row: Product) => void
     data: Product[]
 }
+
 interface PredictionResult {
-    predictions: string; // 预测结果的类型
+    predictions: string;
 }
 
 const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
@@ -20,114 +22,113 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
     const photoRef = useRef<HTMLCanvasElement>(null)
     const [tookPhoto, setTookPhoto] = useState<boolean>(false)
     const [hasFound, setHasFound] = useState<boolean>(false)
-    const [clearImage, setClearImage] = useState<boolean>(false)
+    const [clearImage, setClearImage] = useState<boolean>(true)
     const [foundProduct, setFoundProduct] = useState<Product | null>(null)
-    const router = useRouter()
     const [imageBase64, setImageBase64] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const router = useRouter()
+    const queryClient = useQueryClient();
 
-    const getUserCamera = () => {
-        setHasFound(false)
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
+    useEffect(() => {
+        const getUserCamera = async () => {
+            setHasFound(false)
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 if (videoRef.current) {
-                    videoRef.current.srcObject = stream
-                    videoRef.current.play()
+                    videoRef.current.srcObject = stream;
+                    videoRef.current.play();
                 }
-            })
-            .catch(error => {
-                console.error('Error accessing camera:', error)
-            })
-    }
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+            }
+        }
+
+        getUserCamera();
+
+        return () => {
+            if (videoRef.current && videoRef.current.srcObject) {
+                const stream = videoRef.current.srcObject as MediaStream;
+                stream.getTracks().forEach(track => track.stop());
+                videoRef.current.srcObject = null;
+            }
+        }
+    }, [videoRef]);
+
+    const { mutateAsync: searchImageMutation } = useMutation<PredictionResult, Error, { image: string }>({
+        mutationFn: async ({ image }) => {
+            const res = await fetch('/api/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image }),
+            });
+            const data = await res.json();
+            if (!res.ok || data.error) throw new Error(data.error || 'Failed to send the image');
+            return data as PredictionResult;
+        },
+        onError: (error) => {
+            console.error('Image search failed:', error);
+        },
+    });
 
     const takePhoto = () => {
+        setClearImage(false)
         if (!videoRef.current || !photoRef.current) return;
-    
+
         const width = 500;
         const height = width / (16 / 9);
         const photo = photoRef.current;
         const video = videoRef.current;
         photo.width = width;
         photo.height = height;
-    
+
         const ctx = photo.getContext('2d');
         if (ctx) {
-            ctx.translate(photo.width, 0);
-            ctx.scale(-1, 1);
+            // ctx.translate(photo.width, 0);
+            // ctx.scale(-1, 1);
             ctx.drawImage(video, 0, 0, photo.width, photo.height);
         }
         const imageData = photo.toDataURL('image/png');
-        setImageBase64(imageData);  //store
+        setImageBase64(imageData);
         setTookPhoto(true);
     };
 
-    useEffect(() => {
-        getUserCamera()
-
-        return () => {
-            if (videoRef.current && videoRef.current.srcObject) {
-                const stream = videoRef.current.srcObject as MediaStream
-                const tracks = stream.getTracks()
-                tracks.forEach(track => track.stop())
-                videoRef.current.srcObject = null
-            }
-        }
-    }, [videoRef])
-
-    const queryClient = useQueryClient();
-    const { mutateAsync: searchImageMutation } = useMutation<PredictionResult, Error, { image: string }>({
-        mutationFn: async ({ image }: { image: string }) => {
-            try {
-                const res = await fetch('/predict', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ image }),
-                });
-    
-                const data = await res.json();
-                if (!res.ok || data.error) throw new Error(data.error || 'Failed to send the image');
-    
-                return data as PredictionResult;  // 显式指定返回的数据类型
-            } catch (error) {
-                throw new Error('error');
-            }
-        },
-    });
-
     const searchImage = async () => {
-    try {
-        const result = await searchImageMutation({ image: imageBase64 });  // 传递图像数据
-        const product = result.predictions;  // 从返回的数据中提取预测结果
+        setIsLoading(true);
+        if (!imageBase64) return;
+        try {
+            const result = await searchImageMutation({ image: imageBase64 });
+            const product = result.predictions;
 
-        // Further processing
-        const matchedProduct = data.find(item => item.productName === product);
-        if (matchedProduct) {
-            setFoundProduct(matchedProduct);
-            setHasFound(true);
+            const matchedProduct = data.find(item => item.productName === product);
+            if (matchedProduct) {
+                setFoundProduct(matchedProduct);
+                setHasFound(true);
+                setIsLoading(false);
+            }
+            setTookPhoto(false);
+        } catch (error) {
+            console.log(error);
         }
-        setTookPhoto(false);
-    } catch (error) {
-        console.log(error);
-    }
-};
+    };
 
     const seeProductDetail = () => {
         if (foundProduct) {
-            onRowClick(foundProduct)
+            onRowClick(foundProduct);
         }
-    }
+    };
 
     const deleteCurrentImage = () => {
-        setClearImage(true)
-        setHasFound(false)
-        setTookPhoto(false)
-        setFoundProduct(null)
+        setClearImage(true);
+        setHasFound(false);
+        setTookPhoto(false);
+        setFoundProduct(null);
         if (photoRef.current) {
-            const ctx = photoRef.current.getContext('2d')
+            const ctx = photoRef.current.getContext('2d');
             if (ctx) {
-                ctx.clearRect(0, 0, photoRef.current.width, photoRef.current.height)
+                ctx.clearRect(0, 0, photoRef.current.width, photoRef.current.height);
             }
         }
-    }
+    };
 
     return (
         <div className='flex md:flex-row flex-col'>
@@ -139,8 +140,15 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
                         style={{ transform: 'scaleX(-1)' }}
                     ></video>
                 </div>
-                <div className='w-full flex justify-center my-10'>
-                    <Button size='lg' onClick={takePhoto} className={`${clearImage ? 'active' : 'deactive'} p-6 md:p-10 rounded-xl md:rounded-2xl`}>Take photo</Button>
+                <div className='w-full flex justify-center my-10 group'>
+                    <div className={`w-20 h-20 flex items-center justify-center rounded-full border-4 bg-background ${clearImage ? 'border-impact group-hover:border-impact/80' : 'border-muted cursor-not-allowed'}`}>
+                        <Button
+                            size='sm'
+                            onClick={clearImage ? takePhoto : undefined}
+                            disabled={isLoading || !clearImage}
+                            className={`rounded-full w-16 h-16 px-2 py-2 ${clearImage ? 'bg-impact group-hover:bg-impact/80' : 'bg-muted cursor-not-allowed'}`}
+                        />
+                    </div>
                 </div>
             </div>
             <div className='w-full md:w-2/6 h-full flex flex-col pr-3 md:mr-3'>
@@ -164,22 +172,22 @@ const CameraSection: FC<DataTableProps> = ({ onRowClick, data }) => {
                     )}
                 </div>
                 <div className='w-full flex justify-evenly mt-10 ml-3'>
-                    <Button size='lg' onClick={searchImage} disabled={!tookPhoto} className='p-6 md:p-10 rounded-xl md:rounded-2xl'>
-                        Search
+                    <Button size='lg' onClick={searchImage} disabled={!tookPhoto || isLoading} className='p-6 md:p-8 rounded-xl md:rounded-2xl bg-impact hover:bg-impact/80'>
+                        {isLoading ? <LoadingSpinner color='background' /> : 'Search'}
                     </Button>
                     {hasFound && (
-                        <Button size='lg' onClick={seeProductDetail} className='p-6 md:p-10 rounded-xl md:rounded-2xl bg-impact'>
+                        <Button size='lg' onClick={seeProductDetail} className='p-6 md:p-8 rounded-xl md:rounded-2xl bg-impact hover:bg-impact/80'>
                             See detail
                         </Button>
                     )}
                     {(tookPhoto || hasFound) && (
-                        <Button size='lg' onClick={deleteCurrentImage} className='p-6 md:p-10 rounded-xl md:rounded-2xl'>
+                        <Button size='lg' onClick={deleteCurrentImage} className='p-6 md:p-8 rounded-xl md:rounded-2xl bg-[#757575] hover:bg-[#757575]/80'>
                             Delete
                         </Button>
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

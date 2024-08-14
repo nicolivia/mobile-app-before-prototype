@@ -1,10 +1,10 @@
 "use client"
 
+import { FC } from 'react'
 import Image from 'next/image'
-import { LanguageOption, LoginForm} from '@/components'
-import SignUpForm from '@/components/auth/SignUpForm';
-export default function SignUpPage() {
+import { LanguageOption, SignUpForm } from '@/components'
 
+const SignUpPage: FC = () => {
     return (
         <div className='bg-custom-gradient w-full min-h-screen m-auto flex items-center justify-even'>
 
@@ -31,3 +31,5 @@ export default function SignUpPage() {
         </div >
     );
 }
+
+export default SignUpPage

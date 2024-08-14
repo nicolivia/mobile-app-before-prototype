@@ -16,6 +16,8 @@ def create_app():
     # Initialise extensions
     db.init_app(app)
     bcrypt = Bcrypt(app)
+    
+    # Configure CORS
     CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
 
     app.config['SESSION_SQLALCHEMY'] = db
@@ -36,10 +38,8 @@ def create_app():
     from app.product_routes import bp as product_bp
     app.register_blueprint(product_bp)
 
-    
     from app.recognition_routes import bp as recognition_bp
     app.register_blueprint(recognition_bp)
-
 
     return app
 

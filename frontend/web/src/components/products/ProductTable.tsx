@@ -68,7 +68,8 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
     return (
         <div>
             <div className='min-h-[730px] bg-white py-2 rounded-3xl mt-5 flex flex-col items-end'>
-                <div className="w-full flex justify-end my-4">
+                <div className="w-full flex justify-end my-0">
+                    {/* Filter Dropdown */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <div className="w-[150px] flex justify-between items-center my-3 mr-3 border rounded-lg">
@@ -102,6 +103,7 @@ const ProductTable = <TData, TValue>({ columns, data, onRowClick }: DataTablePro
                                 })}
                         </DropdownMenuContent>
                     </DropdownMenu>
+                    {/* Search Bar */}
                     <form
                         onReset={handleReset}
                         className='w-[270px] flex justify-between items-center my-3 mr-3 border rounded-lg'
